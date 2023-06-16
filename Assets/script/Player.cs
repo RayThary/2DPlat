@@ -23,18 +23,20 @@ public class Player : MonoBehaviour
     [SerializeField] private bool m_playerDash;
     [SerializeField] private bool one;
     [SerializeField] private bool two;
-    [SerializeField]private bool three;
+    [SerializeField] private bool three;
+    [SerializeField] private bool four;
     [SerializeField] private bool m_dashRightCheck;
     [SerializeField] private bool m_dashLeftCheck;
-    [SerializeField] private float playerDashCoolTime = 0.0f;
+    [SerializeField] private float playerDashCoolTime = 0.0f;//대시 쿨타임
     [SerializeField] private float playerDashMaxCoolTime = 4.9f;
+
+    [SerializeField] private float playerDashTimer = 0.0f;//대시 다시누르기까지의 시간
     [SerializeField] private float playerDashLimit = 1.0f;
-    [SerializeField] private float playerDashTimer = 0.0f;
+
+    [SerializeField]float timer = 0.0f;//대시를 하는시간
+    [SerializeReference]float dashLimitTimer = 0.2f;
 
     [SerializeField] private bool downWalk;
-
-    [SerializeField]float timer = 0.0f;
-    [SerializeReference]float dashLimitTimer = 5.0f;
 
     private Rigidbody2D m_rig2d;
 
@@ -54,17 +56,23 @@ public class Player : MonoBehaviour
         jumpGravity();
         AttackSkill1();
         PlayerDashCheck();
+        test();
     }
 
     private void playerMove()
     {
-        if (two)
+        if (four)
         {
             return;
         }
 
+
        if (Input.GetKey(KeyCode.RightArrow))
         {
+            if (three)
+            {
+                m_dashRightCheck = true;
+            }
             moveDir.x = 1;
             transform.localScale = new Vector3(1, 1, 1);
             
@@ -72,96 +80,105 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.RightArrow))
         {
             moveDir.x = 0;
-            m_dashRightCheck = true;
+            m_dashRightCheck = false;
+            three = false;
             beforeKeycode = KeyCode.RightArrow;
-            if (beforeKeycode == KeyCode.LeftArrow)
-            {
-                playerDashCoolCheck();
-            }
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            
+            if (three)
+            {
+                m_dashLeftCheck = true;
+            }
             moveDir.x = -1;
             transform.localScale = new Vector3(-1, 1, 1);
         }
         else if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
             moveDir.x = 0;
-            m_dashLeftCheck = true;
             beforeKeycode = KeyCode.LeftArrow;
-            if (beforeKeycode == KeyCode.LeftArrow)
-            {
-                playerDashCoolCheck();
-            }
+            three = false;
+            m_dashLeftCheck = false;
         }
-
-        
 
         m_rig2d.velocity = moveDir * m_playerspeed;
     }
 
    
-
-
-    private void PlayerDashCheck()
+    private void test()
     {
-        
-        
-        playerDashCoolTime += Time.deltaTime;
-        if (playerDashCoolTime > playerDashMaxCoolTime)
-        {
-            playerDashCoolTime = 6;
-        }
-        
-
-        playerDashTimer += Time.deltaTime;
-        if(playerDashTimer >= playerDashLimit)
-        {
-            one = false;
-        }
-
-        if (one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.RightArrow)) 
-        {
-            Debug.Log("체크");
-            moveDir.x = 10.0f;
-            two = true;
-            if(beforeKeycode == KeyCode.RightArrow)
-            {
-                moveDir.x = 10.0f;
-            }
-            else
-            {
-
-            }
-        }
-        if (two)
-        {
-            timer += Time.deltaTime;
-            m_rig2d.velocity = moveDir * m_playerspeed;
-            if (timer >= dashLimitTimer)
-            {
-                two = false;
-            }
-        }
-        
-    }
-
-    private void playerDashCoolCheck()
-    {
-        
         if (playerDashCoolTime < playerDashMaxCoolTime)
         {
             one = false;
             return;
         }
-        one = true;
-        playerDashCoolTime = 0;
-        playerDashTimer = 0;
-        timer = 0;
-    
+        if (three== false)
+        {
+            playerDashTimer += Time.deltaTime;
+        }
+        if (playerDashTimer >= playerDashLimit)
+        {
+            three = true;
+            one = false;
+        }
+        if (three)
+        {
+            playerDashTimer = 0;
+        }
+        if (three==false && beforeKeycode == KeyCode.RightArrow && Input.GetKeyDown(KeyCode.RightArrow)) 
+        {
+            one = true;
+            playerDashCoolTime = 0;
+            playerDashTimer = 0;
+            timer = 0;
+        }
+        else if (three==false && beforeKeycode == KeyCode.LeftArrow && Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            two = true;
+            playerDashCoolTime = 0;
+            playerDashTimer = 0;
+            timer = 0;
+        }
+
+
+
     }
+
+    private void PlayerDashCheck()
+    {
+        playerDashCoolTime += Time.deltaTime;
+        if (playerDashCoolTime > playerDashMaxCoolTime)
+        {
+            playerDashCoolTime = 6;
+        }
+
+        if (one)  
+        {
+            four = true;
+            moveDir.x = 4.0f;        
+        }
+        else if (two)
+        {
+            four = true;
+            moveDir.x = -4.0f;
+        }
+        if (four)
+        {
+            timer += Time.deltaTime;
+            m_rig2d.velocity = moveDir * m_playerspeed;
+            if (timer >= dashLimitTimer)
+            {
+                four = false;
+                one = false;
+                two = false;
+                moveDir.x = 0.0f;
+            }
+        }
+        
+    }
+
+ 
 
     private void jumpCheck()
     {
