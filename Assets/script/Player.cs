@@ -63,6 +63,11 @@ public class Player : MonoBehaviour
             return;
         }
 
+        if(Input.GetKeyDown(KeyCode.RightArrow)) 
+        {
+            m_dashRightCheck = true;
+        }
+
        if (Input.GetKey(KeyCode.RightArrow))
         {
             moveDir.x = 1;
@@ -72,12 +77,15 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.RightArrow))
         {
             moveDir.x = 0;
-            m_dashRightCheck = true;
+            m_dashRightCheck = false;
             beforeKeycode = KeyCode.RightArrow;
-            if (beforeKeycode == KeyCode.LeftArrow)
-            {
-                playerDashCoolCheck();
-            }
+            playerDashCoolCheck();
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            m_dashLeftCheck = true;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -89,12 +97,9 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
             moveDir.x = 0;
-            m_dashLeftCheck = true;
             beforeKeycode = KeyCode.LeftArrow;
-            if (beforeKeycode == KeyCode.LeftArrow)
-            {
-                playerDashCoolCheck();
-            }
+            playerDashCoolCheck();
+            m_dashLeftCheck = false;
         }
 
         
@@ -122,18 +127,19 @@ public class Player : MonoBehaviour
             one = false;
         }
 
-        if (one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.RightArrow)) 
+        if ((one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.RightArrow)) ||
+            (one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.LeftArrow)) )  
         {
-            Debug.Log("üũ");
+            
             moveDir.x = 10.0f;
             two = true;
             if(beforeKeycode == KeyCode.RightArrow)
             {
-                moveDir.x = 10.0f;
+                moveDir.x = 4.0f;
             }
-            else
+            if(beforeKeycode == KeyCode.LeftArrow)
             {
-
+                moveDir.x = -4.0f;
             }
         }
         if (two)
@@ -154,6 +160,14 @@ public class Player : MonoBehaviour
         if (playerDashCoolTime < playerDashMaxCoolTime)
         {
             one = false;
+            return;
+        }
+        if (beforeKeycode == KeyCode.LeftArrow && m_dashRightCheck)
+        {
+            return;
+        }
+        if(beforeKeycode==KeyCode.RightArrow && m_dashLeftCheck)
+        {
             return;
         }
         one = true;
