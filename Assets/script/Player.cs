@@ -20,19 +20,27 @@ public class Player : MonoBehaviour
     public bool skill1;
     [Header("플레이어 대쉬관련")]
 
-    [SerializeField]private bool m_playerDash;
-    private bool one;
-    [SerializeField]private float playerDashCoolTime = 0.0f;
-    [SerializeField]private float playerDashMaxCoolTime = 4.9f;
+    [SerializeField] private bool m_playerDash;
+    [SerializeField] private bool one;
+    [SerializeField] private bool two;
+    [SerializeField]private bool three;
+    [SerializeField] private bool m_dashRightCheck;
+    [SerializeField] private bool m_dashLeftCheck;
+    [SerializeField] private float playerDashCoolTime = 0.0f;
+    [SerializeField] private float playerDashMaxCoolTime = 4.9f;
     [SerializeField] private float playerDashLimit = 1.0f;
-    private float playerDashTimer = 0.0f;
+    [SerializeField] private float playerDashTimer = 0.0f;
 
     [SerializeField] private bool downWalk;
 
+    [SerializeField]float timer = 0.0f;
+    [SerializeReference]float dashLimitTimer = 5.0f;
 
     private Rigidbody2D m_rig2d;
 
     private Vector3 moveDir;
+
+    private KeyCode beforeKeycode;
 
     void Start()
     {
@@ -45,78 +53,121 @@ public class Player : MonoBehaviour
         jumpCheck();
         jumpGravity();
         AttackSkill1();
-        playerDash();
+        PlayerDashCheck();
     }
 
     private void playerMove()
     {
-        //if (one)
-        //{
-        //    return;
-        //}
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (two)
+        {
+            return;
+        }
+
+       if (Input.GetKey(KeyCode.RightArrow))
         {
             moveDir.x = 1;
             transform.localScale = new Vector3(1, 1, 1);
-            m_playerDash = true;
+            
         }
         else if (Input.GetKeyUp(KeyCode.RightArrow))
         {
             moveDir.x = 0;
-        }
-        else if (Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            m_playerDash = false;
+            m_dashRightCheck = true;
+            beforeKeycode = KeyCode.RightArrow;
+            if (beforeKeycode == KeyCode.LeftArrow)
+            {
+                playerDashCoolCheck();
+            }
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
+            
             moveDir.x = -1;
             transform.localScale = new Vector3(-1, 1, 1);
-            m_playerDash = true;
         }
         else if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
             moveDir.x = 0;
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftArrow))
-        {
-            m_playerDash = false;
+            m_dashLeftCheck = true;
+            beforeKeycode = KeyCode.LeftArrow;
+            if (beforeKeycode == KeyCode.LeftArrow)
+            {
+                playerDashCoolCheck();
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-
-        }
+        
 
         m_rig2d.velocity = moveDir * m_playerspeed;
     }
 
-    private void playerDash()
+   
+
+
+    private void PlayerDashCheck()
     {
+        
+        
         playerDashCoolTime += Time.deltaTime;
+        if (playerDashCoolTime > playerDashMaxCoolTime)
+        {
+            playerDashCoolTime = 6;
+        }
+        
+
         playerDashTimer += Time.deltaTime;
-        if (m_playerDash && playerDashTimer<playerDashLimit && Input.GetKeyDown(KeyCode.LeftShift)) 
+        if(playerDashTimer >= playerDashLimit)
         {
-            one = true;
-            m_rig2d.velocity += new Vector2(10.0f, 0f);
-        }
-        else if (one)
-        {
-            
-        }
-        if (playerDashTimer > playerDashLimit)
-        {
-            playerDashTimer = 0;
+            one = false;
         }
 
+        if (one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.RightArrow)) 
+        {
+            Debug.Log("체크");
+            moveDir.x = 10.0f;
+            two = true;
+            if(beforeKeycode == KeyCode.RightArrow)
+            {
+                moveDir.x = 10.0f;
+            }
+            else
+            {
 
+            }
+        }
+        if (two)
+        {
+            timer += Time.deltaTime;
+            m_rig2d.velocity = moveDir * m_playerspeed;
+            if (timer >= dashLimitTimer)
+            {
+                two = false;
+            }
+        }
+        
+    }
+
+    private void playerDashCoolCheck()
+    {
+        
+        if (playerDashCoolTime < playerDashMaxCoolTime)
+        {
+            one = false;
+            return;
+        }
+        one = true;
+        playerDashCoolTime = 0;
+        playerDashTimer = 0;
+        timer = 0;
+    
     }
 
     private void jumpCheck()
     {
         if (m_groundcheck == false)
         {
+
             if (Input.GetKeyDown(KeyCode.UpArrow) && m_doublecheck)
             {
                 m_doublejump = true;
@@ -133,12 +184,9 @@ public class Player : MonoBehaviour
 
     private void jumpGravity()
     {
-        if (one)
-        {
-            return;
-        }
         if (m_groundcheck == false)
         {
+           
             m_jumpGravity -= m_gravity * Time.deltaTime;
             if (m_jumpGravity < -10f)
             {
@@ -193,6 +241,7 @@ public class Player : MonoBehaviour
                             m_groundcheck = true;
                             m_doublecheck = true;
                         }
+                        
                         break;
                     case HitBox.HitType.Wall:
 
