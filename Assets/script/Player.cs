@@ -66,6 +66,13 @@ public class Player : MonoBehaviour
             return;
         }
 
+<<<<<<< HEAD
+=======
+        if(Input.GetKeyDown(KeyCode.RightArrow)) 
+        {
+            m_dashRightCheck = true;
+        }
+>>>>>>> origin/main
 
        if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -81,8 +88,19 @@ public class Player : MonoBehaviour
         {
             moveDir.x = 0;
             m_dashRightCheck = false;
+<<<<<<< HEAD
             three = false;
             beforeKeycode = KeyCode.RightArrow;
+=======
+            beforeKeycode = KeyCode.RightArrow;
+            playerDashCoolCheck();
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            m_dashLeftCheck = true;
+>>>>>>> origin/main
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -98,7 +116,11 @@ public class Player : MonoBehaviour
         {
             moveDir.x = 0;
             beforeKeycode = KeyCode.LeftArrow;
+<<<<<<< HEAD
             three = false;
+=======
+            playerDashCoolCheck();
+>>>>>>> origin/main
             m_dashLeftCheck = false;
         }
 
@@ -108,11 +130,60 @@ public class Player : MonoBehaviour
    
     private void test()
     {
+<<<<<<< HEAD
+=======
+        
+        
+        playerDashCoolTime += Time.deltaTime;
+        if (playerDashCoolTime > playerDashMaxCoolTime)
+        {
+            playerDashCoolTime = 6;
+        }
+        
+
+        playerDashTimer += Time.deltaTime;
+        if(playerDashTimer >= playerDashLimit)
+        {
+            one = false;
+        }
+
+        if ((one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.RightArrow)) ||
+            (one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.LeftArrow)) )  
+        {
+            
+            moveDir.x = 10.0f;
+            two = true;
+            if(beforeKeycode == KeyCode.RightArrow)
+            {
+                moveDir.x = 4.0f;
+            }
+            if(beforeKeycode == KeyCode.LeftArrow)
+            {
+                moveDir.x = -4.0f;
+            }
+        }
+        if (two)
+        {
+            timer += Time.deltaTime;
+            m_rig2d.velocity = moveDir * m_playerspeed;
+            if (timer >= dashLimitTimer)
+            {
+                two = false;
+            }
+        }
+        
+    }
+
+    private void playerDashCoolCheck()
+    {
+        
+>>>>>>> origin/main
         if (playerDashCoolTime < playerDashMaxCoolTime)
         {
             one = false;
             return;
         }
+<<<<<<< HEAD
         if (three== false)
         {
             playerDashTimer += Time.deltaTime;
@@ -143,6 +214,21 @@ public class Player : MonoBehaviour
 
 
 
+=======
+        if (beforeKeycode == KeyCode.LeftArrow && m_dashRightCheck)
+        {
+            return;
+        }
+        if(beforeKeycode==KeyCode.RightArrow && m_dashLeftCheck)
+        {
+            return;
+        }
+        one = true;
+        playerDashCoolTime = 0;
+        playerDashTimer = 0;
+        timer = 0;
+    
+>>>>>>> origin/main
     }
 
     private void PlayerDashCheck()
