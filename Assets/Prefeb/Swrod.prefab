@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1767701501180534556}
   - component: {fileID: 6183093744000340561}
   m_Layer: 0
-  m_Name: TX Village Props - Heavy Sword
+  m_Name: Swrod
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

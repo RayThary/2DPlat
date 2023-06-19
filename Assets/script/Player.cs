@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject m_Attack1;
     [SerializeField] private Transform m_trsGameObject;
     public bool skill1;
+    public bool skill2;
     [Header("플레이어 대쉬관련")]
 
     [SerializeField] private bool m_playerDash;
@@ -33,8 +34,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float playerDashTimer = 0.0f;//대시 다시누르기까지의 시간
     [SerializeField] private float playerDashLimit = 1.0f;
 
-    [SerializeField]float timer = 0.0f;//대시를 하는시간
-    [SerializeReference]float dashLimitTimer = 0.2f;
+    [SerializeField] float timer = 0.0f;//대시를 하는시간
+    [SerializeReference] float dashLimitTimer = 0.2f;
 
     [SerializeField] private bool downWalk;
 
@@ -66,15 +67,8 @@ public class Player : MonoBehaviour
             return;
         }
 
-<<<<<<< HEAD
-=======
-        if(Input.GetKeyDown(KeyCode.RightArrow)) 
-        {
-            m_dashRightCheck = true;
-        }
->>>>>>> origin/main
 
-       if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             if (three)
             {
@@ -82,25 +76,14 @@ public class Player : MonoBehaviour
             }
             moveDir.x = 1;
             transform.localScale = new Vector3(1, 1, 1);
-            
+
         }
         else if (Input.GetKeyUp(KeyCode.RightArrow))
         {
             moveDir.x = 0;
             m_dashRightCheck = false;
-<<<<<<< HEAD
             three = false;
             beforeKeycode = KeyCode.RightArrow;
-=======
-            beforeKeycode = KeyCode.RightArrow;
-            playerDashCoolCheck();
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            m_dashLeftCheck = true;
->>>>>>> origin/main
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -116,75 +99,22 @@ public class Player : MonoBehaviour
         {
             moveDir.x = 0;
             beforeKeycode = KeyCode.LeftArrow;
-<<<<<<< HEAD
             three = false;
-=======
-            playerDashCoolCheck();
->>>>>>> origin/main
             m_dashLeftCheck = false;
         }
 
         m_rig2d.velocity = moveDir * m_playerspeed;
     }
 
-   
+
     private void test()
     {
-<<<<<<< HEAD
-=======
-        
-        
-        playerDashCoolTime += Time.deltaTime;
-        if (playerDashCoolTime > playerDashMaxCoolTime)
-        {
-            playerDashCoolTime = 6;
-        }
-        
-
-        playerDashTimer += Time.deltaTime;
-        if(playerDashTimer >= playerDashLimit)
-        {
-            one = false;
-        }
-
-        if ((one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.RightArrow)) ||
-            (one && playerDashTimer <= playerDashLimit && Input.GetKeyDown(KeyCode.LeftArrow)) )  
-        {
-            
-            moveDir.x = 10.0f;
-            two = true;
-            if(beforeKeycode == KeyCode.RightArrow)
-            {
-                moveDir.x = 4.0f;
-            }
-            if(beforeKeycode == KeyCode.LeftArrow)
-            {
-                moveDir.x = -4.0f;
-            }
-        }
-        if (two)
-        {
-            timer += Time.deltaTime;
-            m_rig2d.velocity = moveDir * m_playerspeed;
-            if (timer >= dashLimitTimer)
-            {
-                two = false;
-            }
-        }
-        
-    }
-
-    private void playerDashCoolCheck()
-    {
-        
->>>>>>> origin/main
         if (playerDashCoolTime < playerDashMaxCoolTime)
         {
             one = false;
             return;
         }
-<<<<<<< HEAD
-        if (three== false)
+        if (three == false)
         {
             playerDashTimer += Time.deltaTime;
         }
@@ -197,14 +127,14 @@ public class Player : MonoBehaviour
         {
             playerDashTimer = 0;
         }
-        if (three==false && beforeKeycode == KeyCode.RightArrow && Input.GetKeyDown(KeyCode.RightArrow)) 
+        if (three == false && beforeKeycode == KeyCode.RightArrow && Input.GetKeyDown(KeyCode.RightArrow))
         {
             one = true;
             playerDashCoolTime = 0;
             playerDashTimer = 0;
             timer = 0;
         }
-        else if (three==false && beforeKeycode == KeyCode.LeftArrow && Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (three == false && beforeKeycode == KeyCode.LeftArrow && Input.GetKeyDown(KeyCode.LeftArrow))
         {
             two = true;
             playerDashCoolTime = 0;
@@ -214,21 +144,6 @@ public class Player : MonoBehaviour
 
 
 
-=======
-        if (beforeKeycode == KeyCode.LeftArrow && m_dashRightCheck)
-        {
-            return;
-        }
-        if(beforeKeycode==KeyCode.RightArrow && m_dashLeftCheck)
-        {
-            return;
-        }
-        one = true;
-        playerDashCoolTime = 0;
-        playerDashTimer = 0;
-        timer = 0;
-    
->>>>>>> origin/main
     }
 
     private void PlayerDashCheck()
@@ -239,10 +154,10 @@ public class Player : MonoBehaviour
             playerDashCoolTime = 6;
         }
 
-        if (one)  
+        if (one)
         {
             four = true;
-            moveDir.x = 4.0f;        
+            moveDir.x = 4.0f;
         }
         else if (two)
         {
@@ -261,10 +176,10 @@ public class Player : MonoBehaviour
                 moveDir.x = 0.0f;
             }
         }
-        
+
     }
 
- 
+
 
     private void jumpCheck()
     {
@@ -289,7 +204,7 @@ public class Player : MonoBehaviour
     {
         if (m_groundcheck == false)
         {
-           
+
             m_jumpGravity -= m_gravity * Time.deltaTime;
             if (m_jumpGravity < -10f)
             {
@@ -331,7 +246,7 @@ public class Player : MonoBehaviour
     }
 
 
-    public void OnTrigger(HitBox.eHitBoxState _state, HitBox.HitType _hitType, Collider2D _collision)
+    public void OnTriggerPlayer(HitBox.eHitBoxState _state, HitBox.HitType _hitType, Collider2D _collision)
     {
         switch (_state)
         {
@@ -344,7 +259,7 @@ public class Player : MonoBehaviour
                             m_groundcheck = true;
                             m_doublecheck = true;
                         }
-                        
+
                         break;
                     case HitBox.HitType.Wall:
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class HitBox : MonoBehaviour
 {
     private Player player;
+    private SkillAttack skill;
 
     [SerializeField] private HitType hitType;
   
@@ -12,7 +13,8 @@ public class HitBox : MonoBehaviour
     {
         Ground,
         Wall,
-        Enemy
+        Enemy,
+        Skill,
     }
 
     public enum eHitBoxState
@@ -25,10 +27,13 @@ public class HitBox : MonoBehaviour
     private void Start()
     {
         player = GetComponentInParent<Player>();
+        skill= GetComponent<SkillAttack>();
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        player.OnTrigger(eHitBoxState.Enter, hitType, collision);
+        player.OnTriggerPlayer(eHitBoxState.Enter, hitType, collision);
+        //skill.OnTriggerSkill(eHitBoxState.Enter, hitType, collision);
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -37,6 +42,6 @@ public class HitBox : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        player.OnTrigger(eHitBoxState.Exit, hitType, collision);
+        player.OnTriggerPlayer(eHitBoxState.Exit, hitType, collision);
     }
 }
