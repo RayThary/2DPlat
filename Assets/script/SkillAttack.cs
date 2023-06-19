@@ -8,15 +8,11 @@ public class SkillAttack : MonoBehaviour
     [SerializeField] private float m_fDaggerSpeed = 5.0f;
     [SerializeField] private float m_fArrowSpeed = 2.0f;
 
-    [SerializeField] private Transform m_TrsArrow;
+    [SerializeField] private Transform m_TrsArrow;//화살생성위치
     [SerializeField] private Transform m_TrsTarget;//범위안에있을경우 생성되서 범위안에있는 몬스터중 가장가까운 몬스터가 지정될만한곳
-    private bool m_CheckEnemy;
+    private bool m_CheckEnemy=false;//닿았는지확인
 
     [SerializeField][Range(0, 1)] private float m_Angle;
-
-    private Transform myTransform;
-
-    Camera m_cam = null;
 
     private void OnBecameInvisible()
     {

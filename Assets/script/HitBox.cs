@@ -15,6 +15,7 @@ public class HitBox : MonoBehaviour
         Wall,
         Enemy,
         Skill,
+        PassWall,
     }
 
     public enum eHitBoxState
@@ -37,7 +38,7 @@ public class HitBox : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        
+        player.OnTriggerPlayer(eHitBoxState.Stay, hitType, collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)

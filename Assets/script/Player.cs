@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     [SerializeField] float timer = 0.0f;//대시를 하는시간
     [SerializeReference] float dashLimitTimer = 0.2f;
 
-    [SerializeField] private bool downWalk;
+    public bool DownWalk;
 
     private Rigidbody2D m_rig2d;
 
@@ -102,6 +102,7 @@ public class Player : MonoBehaviour
             three = false;
             m_dashLeftCheck = false;
         }
+
 
         m_rig2d.velocity = moveDir * m_playerspeed;
     }
@@ -259,8 +260,11 @@ public class Player : MonoBehaviour
                             m_groundcheck = true;
                             m_doublecheck = true;
                         }
-
-                        break;
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
+                        {
+                            m_groundcheck = false;
+                        }
+                            break;
                     case HitBox.HitType.Wall:
 
                         break;
@@ -270,10 +274,10 @@ public class Player : MonoBehaviour
                 switch (_hitType)
                 {
                     case HitBox.HitType.Ground:
-
+                        
                         break;
-                    case HitBox.HitType.Wall:
-
+                    case HitBox.HitType.PassWall:
+                        
                         break;
                 }
                 break;
@@ -281,13 +285,13 @@ public class Player : MonoBehaviour
                 switch (_hitType)
                 {
                     case HitBox.HitType.Ground:
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
                         {
                             m_groundcheck = false;
                         }
                         break;
-                    case HitBox.HitType.Wall:
-
+                    case HitBox.HitType.PassWall:
+                        
                         break;
                 }
                 break;
