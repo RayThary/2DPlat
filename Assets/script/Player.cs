@@ -10,40 +10,36 @@ public class Player : MonoBehaviour
     [SerializeField] private float m_playerjump = 5f;
     private float m_gravity = 9.81f;
     private bool m_jumpcheck = false;
-    [SerializeField] private bool m_doublejump;
+    private bool m_doublejump;
     private bool m_doublecheck = true;
-    [SerializeField] private bool m_groundcheck = false;
-    [Header("플레이어 공격관련")]
-    [SerializeField] private GameObject m_AttBorn;
-    [SerializeField] private GameObject m_Attack1;
-    [SerializeField] private Transform m_trsGameObject;
-    public bool skill1;
-    public bool skill2;
+     private bool m_groundcheck = false;
+
     [Header("플레이어 대쉬관련")]
 
-    [SerializeField] private bool m_playerDash;
-    [SerializeField] private bool one;
-    [SerializeField] private bool two;
-    [SerializeField] private bool three;
-    [SerializeField] private bool four;
-    [SerializeField] private bool m_dashRightCheck;
-    [SerializeField] private bool m_dashLeftCheck;
-    [SerializeField] private float playerDashCoolTime = 0.0f;//대시 쿨타임
+    private bool m_playerDash;
+    private bool m_PlayerRightDash;
+    private bool m_PlayerLeftDash;
+    private bool m_PlayerDoubleTap;
+    private bool m_PlayerDashing;
+    private bool m_dashRightCheck;
+    private bool m_dashLeftCheck;
+    private float playerDashCoolTime = 0.0f;//대시 쿨타임
     [SerializeField] private float playerDashMaxCoolTime = 4.9f;
 
-    [SerializeField] private float playerDashTimer = 0.0f;//대시 다시누르기까지의 시간
+    private float playerDashTimer = 0.0f;//대시 다시누르기까지의 시간
     [SerializeField] private float playerDashLimit = 1.0f;
 
-    [SerializeField] float timer = 0.0f;//대시를 하는시간
+    float timer = 0.0f;//대시를 하는시간
     [SerializeReference] float dashLimitTimer = 0.2f;
 
-    public bool DownWalk;
+    [SerializeField] private LayerMask GroundCheck;
 
     private Rigidbody2D m_rig2d;
 
     private Vector3 moveDir;
 
     private KeyCode beforeKeycode;
+
 
     void Start()
     {
@@ -55,14 +51,13 @@ public class Player : MonoBehaviour
         playerMove();
         jumpCheck();
         jumpGravity();
-        AttackSkill1();
         PlayerDashCheck();
         test();
     }
 
     private void playerMove()
     {
-        if (four)
+        if (m_PlayerDashing)
         {
             return;
         }
@@ -70,7 +65,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            if (three)
+            if (m_PlayerDoubleTap)
             {
                 m_dashRightCheck = true;
             }
@@ -82,13 +77,13 @@ public class Player : MonoBehaviour
         {
             moveDir.x = 0;
             m_dashRightCheck = false;
-            three = false;
+            m_PlayerDoubleTap = false;
             beforeKeycode = KeyCode.RightArrow;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            if (three)
+            if (m_PlayerDoubleTap)
             {
                 m_dashLeftCheck = true;
             }
@@ -99,10 +94,9 @@ public class Player : MonoBehaviour
         {
             moveDir.x = 0;
             beforeKeycode = KeyCode.LeftArrow;
-            three = false;
+            m_PlayerDoubleTap = false;
             m_dashLeftCheck = false;
         }
-
 
         m_rig2d.velocity = moveDir * m_playerspeed;
     }
@@ -112,38 +106,36 @@ public class Player : MonoBehaviour
     {
         if (playerDashCoolTime < playerDashMaxCoolTime)
         {
-            one = false;
+            m_PlayerRightDash = false;
             return;
         }
-        if (three == false)
+        if (m_PlayerDoubleTap == false)
         {
             playerDashTimer += Time.deltaTime;
         }
         if (playerDashTimer >= playerDashLimit)
         {
-            three = true;
-            one = false;
+            m_PlayerDoubleTap = true;
+            m_PlayerRightDash = false;
         }
-        if (three)
+        if (m_PlayerDoubleTap)
         {
             playerDashTimer = 0;
         }
-        if (three == false && beforeKeycode == KeyCode.RightArrow && Input.GetKeyDown(KeyCode.RightArrow))
+        if (m_PlayerDoubleTap == false && beforeKeycode == KeyCode.RightArrow && Input.GetKeyDown(KeyCode.RightArrow))
         {
-            one = true;
+            m_PlayerRightDash = true;
             playerDashCoolTime = 0;
             playerDashTimer = 0;
             timer = 0;
         }
-        else if (three == false && beforeKeycode == KeyCode.LeftArrow && Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (m_PlayerDoubleTap == false && beforeKeycode == KeyCode.LeftArrow && Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            two = true;
+            m_PlayerLeftDash = true;
             playerDashCoolTime = 0;
             playerDashTimer = 0;
             timer = 0;
         }
-
-
 
     }
 
@@ -155,25 +147,25 @@ public class Player : MonoBehaviour
             playerDashCoolTime = 6;
         }
 
-        if (one)
+        if (m_PlayerRightDash)
         {
-            four = true;
+            m_PlayerDashing = true;
             moveDir.x = 4.0f;
         }
-        else if (two)
+        else if (m_PlayerLeftDash)
         {
-            four = true;
+            m_PlayerDashing = true;
             moveDir.x = -4.0f;
         }
-        if (four)
+        if (m_PlayerDashing)
         {
             timer += Time.deltaTime;
             m_rig2d.velocity = moveDir * m_playerspeed;
             if (timer >= dashLimitTimer)
             {
-                four = false;
-                one = false;
-                two = false;
+                m_PlayerDashing = false;
+                m_PlayerRightDash = false;
+                m_PlayerLeftDash = false;
                 moveDir.x = 0.0f;
             }
         }
@@ -203,6 +195,7 @@ public class Player : MonoBehaviour
 
     private void jumpGravity()
     {
+
         if (m_groundcheck == false)
         {
 
@@ -219,6 +212,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+
             if (m_jumpcheck)
             {
                 m_jumpcheck = false;
@@ -238,64 +232,55 @@ public class Player : MonoBehaviour
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
     }
 
-    private void AttackSkill1()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Instantiate(m_Attack1, m_AttBorn.transform.position, Quaternion.identity, m_trsGameObject);
-        }
-    }
 
-
-    public void OnTriggerPlayer(HitBox.eHitBoxState _state, HitBox.HitType _hitType, Collider2D _collision)
+    public void OnTriggerPlayer(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
     {
         switch (_state)
         {
-            case HitBox.eHitBoxState.Enter:
+            case HitBoxParent.eHitBoxState.Enter:
                 switch (_hitType)
                 {
-                    case HitBox.HitType.Ground:
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                    case HitBoxParent.HitType.Ground:
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") ||
+                           _collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
                         {
-                            m_groundcheck = true;
-                            m_doublecheck = true;
+                           
+                                m_groundcheck = true;
+                                m_doublecheck = true;
                         }
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
-                        {
-                            m_groundcheck = false;
-                        }
-                            break;
-                    case HitBox.HitType.Wall:
+
+                        break;
+                    case HitBoxParent.HitType.Wall:
 
                         break;
                 }
                 break;
-            case HitBox.eHitBoxState.Stay:
+            case HitBoxParent.eHitBoxState.Stay:
                 switch (_hitType)
                 {
-                    case HitBox.HitType.Ground:
+                    case HitBoxParent.HitType.Ground:
                         
                         break;
-                    case HitBox.HitType.PassWall:
-                        
+                    case HitBoxParent.HitType.PassWall:
+
                         break;
                 }
                 break;
-            case HitBox.eHitBoxState.Exit:
+            case HitBoxParent.eHitBoxState.Exit:
                 switch (_hitType)
                 {
-                    case HitBox.HitType.Ground:
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
+                    case HitBoxParent.HitType.Ground:
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") ||
+                            _collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
                         {
                             m_groundcheck = false;
                         }
                         break;
-                    case HitBox.HitType.PassWall:
+                    case HitBoxParent.HitType.PassWall:
                         
                         break;
                 }
                 break;
         }
-
     }
 }

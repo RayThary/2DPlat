@@ -29,30 +29,30 @@ public class SkillAttack : MonoBehaviour
 
     void Update()
     {
-        skill1();
-        skill2();
+    //    skill1();
+    //    skill2();
     }
 
-    private void skill1()
-    {
-        if (player.skill1)
-        {
-            transform.position += new Vector3(1.0f, 0, 0) * m_fDaggerSpeed * Time.deltaTime;
-        }
-    }
+    //private void skill1()
+    //{
+    //    if (player.skill1)
+    //    {
+    //        transform.position += new Vector3(1.0f, 0, 0) * m_fDaggerSpeed * Time.deltaTime;
+    //    }
+    //}
 
-    private void skill2()
-    {
-        if (player.skill2)
-        {
-            transform.position = Vector3.Slerp(m_TrsArrow.position, m_TrsTarget.position, m_Angle);
-            m_Angle += Time.deltaTime * m_fArrowSpeed;
-            if (m_CheckEnemy == true)
-            {
-                Destroy(gameObject);
-            }
-        }
-    }
+    //private void skill2()
+    //{
+    //    if ()
+    //    {
+    //        transform.position = Vector3.Slerp(m_TrsArrow.position, m_TrsTarget.position, m_Angle);
+    //        m_Angle += Time.deltaTime * m_fArrowSpeed;
+    //        if (m_CheckEnemy == true)
+    //        {
+    //            Destroy(gameObject);
+    //        }
+    //    }
+    //}
     public void OnTriggerSkill(HitBox.eHitBoxState _state, HitBox.HitType _hitType, Collider2D _collision)
     {
         switch (_state)
