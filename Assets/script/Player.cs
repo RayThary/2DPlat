@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private bool m_jumpcheck = false;
     private bool m_doublejump;
     private bool m_doublecheck = true;
-     private bool m_groundcheck = false;
+     [SerializeField]private bool m_groundcheck = false;
 
     [Header("플레이어 대쉬관련")]
 
@@ -21,8 +21,8 @@ public class Player : MonoBehaviour
     private bool m_PlayerLeftDash;
     private bool m_PlayerDoubleTap;
     private bool m_PlayerDashing;
-    private bool m_dashRightCheck;
-    private bool m_dashLeftCheck;
+    private bool right;
+    private bool left;
     private float playerDashCoolTime = 0.0f;//대시 쿨타임
     [SerializeField] private float playerDashMaxCoolTime = 4.9f;
 
@@ -65,10 +65,6 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            if (m_PlayerDoubleTap)
-            {
-                m_dashRightCheck = true;
-            }
             moveDir.x = 1;
             transform.localScale = new Vector3(1, 1, 1);
 
@@ -76,17 +72,12 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.RightArrow))
         {
             moveDir.x = 0;
-            m_dashRightCheck = false;
             m_PlayerDoubleTap = false;
             beforeKeycode = KeyCode.RightArrow;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            if (m_PlayerDoubleTap)
-            {
-                m_dashLeftCheck = true;
-            }
             moveDir.x = -1;
             transform.localScale = new Vector3(-1, 1, 1);
         }
@@ -95,7 +86,6 @@ public class Player : MonoBehaviour
             moveDir.x = 0;
             beforeKeycode = KeyCode.LeftArrow;
             m_PlayerDoubleTap = false;
-            m_dashLeftCheck = false;
         }
 
         m_rig2d.velocity = moveDir * m_playerspeed;
@@ -244,7 +234,6 @@ public class Player : MonoBehaviour
                         if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") ||
                            _collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
                         {
-                           
                                 m_groundcheck = true;
                                 m_doublecheck = true;
                         }

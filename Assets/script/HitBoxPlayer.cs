@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class HitBoxPlayer : HitBoxParent
 {
-    private Player player;
+    private RePlayer player;
 
     private void Start()
     {
-        player = GetComponentInParent<Player>();
+        player = GetComponentInParent<RePlayer>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

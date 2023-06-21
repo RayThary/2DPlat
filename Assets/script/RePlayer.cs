@@ -22,33 +22,247 @@ public class RePlayer : MonoBehaviour
     private bool m_PlayerLeftDash;
     private bool m_PlayerDoubleTap;
     private bool m_PlayerDashing;
-    private bool m_dashRightCheck;
-    private bool m_dashLeftCheck;
-    private float playerDashCoolTime = 0.0f;//대시 쿨타임
-    [SerializeField] private float playerDashMaxCoolTime = 4.9f;
+    private KeyCode beforeKeycode;
+
+    [SerializeField] private float playerDashCoolTime = 0.0f;//대시 쿨타임
+    [SerializeField] private float playerDashMaxCoolTime = 5.0f;
 
     private float playerDashTimer = 0.0f;//대시 다시누르기까지의 시간
-    [SerializeField] private float playerDashLimit = 1.0f;
+    [SerializeField] private float playerDashLimit = 0.2f;
 
     float timer = 0.0f;//대시를 하는시간
-    [SerializeReference] float dashLimitTimer = 0.2f;
+   [SerializeField] float dashLimitTimer = 0.2f;
 
     [SerializeField] private LayerMask GroundCheck;
+
 
     private Rigidbody2D m_rig2d;
 
     private Vector3 moveDir;
 
-    private KeyCode beforeKeycode;
-
     void Start()
     {
-        
+        m_rig2d = GetComponent<Rigidbody2D>();   
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        playerMove();
+        jumpCheck();
+        playerDoubleTapCheck();
+        playerDash();
+        jumpGravity();
+    }
+    private void playerMove()
+    {
+        if (m_PlayerDashing)
+        {
+            return;
+        }
+
+
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+
+            moveDir.x = 1;
+            transform.localScale = new Vector3(1, 1, 1);
+
+        }
+        else if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            moveDir.x = 0;
+            m_PlayerDoubleTap = true;
+            beforeKeycode = KeyCode.RightArrow;
+        }
+
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            moveDir.x = -1;
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftArrow))
+        {
+            moveDir.x = 0;
+            beforeKeycode = KeyCode.LeftArrow;
+            m_PlayerDoubleTap = true;
+        }
+
+        m_rig2d.velocity = moveDir * m_playerspeed;
+    }
+    private void playerDoubleTapCheck()
+    {
+        if (playerDashCoolTime < playerDashMaxCoolTime)
+        {
+            m_PlayerRightDash = false;//?일단나뚸
+            m_PlayerLeftDash = false;
+            return;
+        }
+
+        if (m_PlayerDoubleTap)
+        {
+            playerDashTimer += Time.deltaTime;
+        }
+        if (playerDashTimer >= playerDashLimit)
+        {
+            m_PlayerDoubleTap = false;
+            m_PlayerRightDash = false;
+            m_PlayerLeftDash = false;
+        }
+        if (m_PlayerDoubleTap==false)
+        {
+            playerDashTimer = 0;
+        }
+
+        if (m_PlayerDoubleTap && beforeKeycode == KeyCode.RightArrow && Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            m_PlayerRightDash = true;
+            playerDashCoolTime = 0;
+            playerDashTimer = 0;
+            timer = 0;
+        }
+        else if (m_PlayerDoubleTap && beforeKeycode == KeyCode.LeftArrow && Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            m_PlayerLeftDash = true;
+            playerDashCoolTime = 0;
+            playerDashTimer = 0;
+            timer = 0;
+        }
+
+    }
+
+    private void playerDash()
+    {
+        playerDashCoolTime += Time.deltaTime;
+
+        if (m_PlayerRightDash)
+        {
+            m_PlayerDashing = true;
+            moveDir.x = 4.0f;
+        }
+        else if (m_PlayerLeftDash)
+        {
+            m_PlayerDashing = true;
+            moveDir.x = -4.0f;
+        }
+
+        if (m_PlayerDashing)
+        {
+            timer += Time.deltaTime;
+            m_rig2d.velocity = moveDir * m_playerspeed;
+            if (timer >= dashLimitTimer)
+            {
+                m_PlayerDashing = false;
+                m_PlayerRightDash = false;
+                m_PlayerLeftDash = false;
+                moveDir.x = 0.0f;
+            }
+        }
+    }
+
+    private void jumpCheck()
+    {
+        if (m_groundcheck == false)
+        {
+
+            if (Input.GetKeyDown(KeyCode.UpArrow) && m_doublecheck)
+            {
+                m_doublejump = true;
+                m_doublecheck = false;
+            }
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            m_jumpcheck = true;
+        }
+    }
+
+    private void jumpGravity()
+    {
+        if (m_groundcheck == false)
+        {
+
+            m_jumpGravity -= m_gravity * Time.deltaTime;
+            if (m_jumpGravity < -10f)
+            {
+                m_jumpGravity = -10;
+            }
+            if (m_doublejump)
+            {
+                m_jumpGravity = 5.0f;
+                m_doublejump = false;
+            }
+        }
+        else
+        {
+
+            if (m_jumpcheck)
+            {
+                m_jumpcheck = false;
+                m_jumpGravity = m_playerjump;
+            }
+            else if (m_jumpGravity < 0)
+            {
+                m_jumpGravity += m_gravity * 3 * Time.deltaTime;
+                if (m_jumpGravity > 0)
+                {
+                    m_jumpGravity = 0;
+
+                }
+            }
+        }
+
+        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
+    }
+
+    public void OnTriggerPlayer(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
+    {
+        switch (_state)
+        {
+            case HitBoxParent.eHitBoxState.Enter:
+                switch (_hitType)
+                {
+                    case HitBoxParent.HitType.Ground:
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") ||
+                           _collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
+                        {
+
+                            m_groundcheck = true;
+                            m_doublecheck = true;
+                        }
+
+                        break;
+                    case HitBoxParent.HitType.Wall:
+
+                        break;
+                }
+                break;
+            case HitBoxParent.eHitBoxState.Stay:
+                switch (_hitType)
+                {
+                    case HitBoxParent.HitType.Ground:
+
+                        break;
+                    case HitBoxParent.HitType.PassWall:
+
+                        break;
+                }
+                break;
+            case HitBoxParent.eHitBoxState.Exit:
+                switch (_hitType)
+                {
+                    case HitBoxParent.HitType.Ground:
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") ||
+                            _collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
+                        {
+                            m_groundcheck = false;
+                        }
+                        break;
+                    case HitBoxParent.HitType.PassWall:
+
+                        break;
+                }
+                break;
+        }
     }
 }
