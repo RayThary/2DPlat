@@ -5,40 +5,37 @@ using UnityEngine;
 
 public class PassWall : MonoBehaviour
 {
-    [SerializeField] private Player player;
-
-    private BoxCollider2D box2d;
-
-    [SerializeField] private bool passWall;
     private float timer = 0;
     [SerializeField] private float PassTime = 1.0f;
+    public BoxCollider2D box2D;
 
-    void Start()
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireCube(transform.position, box2D.size * transform.localScale);
+    //}
+    private void Start()
     {
-        box2d = GetComponent<BoxCollider2D>();
+        box2D = GetComponent<BoxCollider2D>();
     }
-
     void Update()
     {
-        //if (passWall)
-        //{
-        //    if (gameObject.layer == LayerMask.NameToLayer("Ground"))
-        //    {
-        //        gameObject.layer = LayerMask.NameToLayer("PassWall");
-        //    }
-        //    timer += Time.deltaTime;
-        //    if(timer >= PassTime)
-        //    {
-        //        timer= 0;
-        //        passWall = false;
-        //        gameObject.layer = LayerMask.NameToLayer("Ground");
-        //    }
-        //}
-        //    if (Input.GetKeyDown(KeyCode.DownArrow)) 
-        //    {
-        //        passWall = true;
-        //    }
-
-    
+        RaycastHit2D PlayerHit = Physics2D.BoxCast(box2D.bounds.center, box2D.bounds.size, 0f, Vector2.up, 1f, LayerMask.GetMask("Player"));
+        if (PlayerHit)
+        {
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                gameObject.layer = LayerMask.NameToLayer("PassWall");
+            }
+        }
+        if (gameObject.layer == LayerMask.NameToLayer("PassWall"))
+        {
+            timer += Time.deltaTime;
+            if (timer >= PassTime)
+            {
+                gameObject.layer = LayerMask.NameToLayer("Ground");
+                timer = 0;
+            }
+        }
     }
 }

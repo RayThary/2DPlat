@@ -93,7 +93,7 @@ public class RePlayer : MonoBehaviour
     {
         if (playerDashCoolTime < playerDashMaxCoolTime)
         {
-            m_PlayerRightDash = false;//?ÀÏ´Ü³ªŒô
+            m_PlayerRightDash = false;
             m_PlayerLeftDash = false;
             return;
         }
@@ -215,6 +215,7 @@ public class RePlayer : MonoBehaviour
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
     }
 
+
     public void OnTriggerPlayer(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
     {
         switch (_state)
@@ -223,12 +224,14 @@ public class RePlayer : MonoBehaviour
                 switch (_hitType)
                 {
                     case HitBoxParent.HitType.Ground:
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") ||
-                           _collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
                         {
-
                             m_groundcheck = true;
                             m_doublecheck = true;
+                        }
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
+                        {
+                            m_groundcheck = false;
                         }
 
                         break;
@@ -252,8 +255,7 @@ public class RePlayer : MonoBehaviour
                 switch (_hitType)
                 {
                     case HitBoxParent.HitType.Ground:
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground") ||
-                            _collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
+                        if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
                         {
                             m_groundcheck = false;
                         }

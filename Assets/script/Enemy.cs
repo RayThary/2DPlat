@@ -26,9 +26,9 @@ public class Enemy : MonoBehaviour
             m_rig2d.velocity = new Vector2(NextMove * 4, m_rig2d.velocity.y);
 
             Vector2 frontVec = new Vector2(m_rig2d.position.x + NextMove, m_rig2d.position.y);
-            RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Ground"));
-            RaycastHit2D rayHit2 = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("SideWall"));
-            if (rayHit.collider == null || rayHit2.collider != null)
+            RaycastHit2D rayHitGround = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Ground"));
+            RaycastHit2D rayHitSidWall = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("SideWall"));
+            if (rayHitGround.collider == null || rayHitSidWall.collider != null)
             {
                 NextMove *= -1;
             }
@@ -78,16 +78,6 @@ public class Enemy : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        m_TrsBefore = gameObject.transform;
-        //m_PlayerCheck = true;
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //m_PlayerCheck = false;
-        
-    }
+  
 
 }

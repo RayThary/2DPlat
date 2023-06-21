@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2838732325313326816}
-  - component: {fileID: 3850419244456890466}
   - component: {fileID: 7768398094223781095}
   m_Layer: 0
   m_Name: ArrowHitBox
@@ -33,19 +32,6 @@ Transform:
   m_Father: {fileID: 1576179151777753464}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3850419244456890466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 71149736020745799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62c8b71316bb02343a88b7cc4734d558, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitType: 3
 --- !u!61 &7768398094223781095
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -82,7 +68,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1576179151777753464}
   - component: {fileID: 9211584376081855411}
-  - component: {fileID: 6680273013888282562}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
@@ -158,16 +143,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6680273013888282562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3878937375765179859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62c8b71316bb02343a88b7cc4734d558, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitType: 3
