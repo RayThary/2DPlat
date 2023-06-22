@@ -10,12 +10,11 @@ public class SkillAttack : MonoBehaviour
 
     [SerializeField] private Transform m_TrsArrow;//화살생성위치
     private Vector3 m_startPos;
-    [SerializeField] private Transform m_TrsTarget;//범위안에있을경우 생성되서 범위안에있는 몬스터중 가장가까운 몬스터가 지정될만한곳
-    private bool m_CheckEnemy=false;//닿았는지확인
+    private Transform m_TrsTarget;//범위안에있을경우 생성되서 범위안에있는 몬스터중 가장가까운 몬스터가 지정될만한곳
+    
 
     [SerializeField][Range(0, 1)] private float m_ArrowStartPos;
     [SerializeField][Range(0, 1)] private float m_ArrowEndPos;
-
 
     int m_Angle;
     private void OnBecameInvisible()
@@ -27,16 +26,26 @@ public class SkillAttack : MonoBehaviour
 
     private void Start()
     {
-        m_CheckEnemy = false;
         m_Angle = Random.Range(-1, 2);
         m_startPos = transform.position;
+        
     }
 
     void Update()
     {
-        skill2();
+        
+        checkEnemy();
     }
+    private void checkEnemy()
+    {
+        RaycastHit2D[] HitEnemy = Physics2D.CircleCastAll(transform.position, 5.0f, Vector3.up, 0f, LayerMask.GetMask("Enemy"));
 
+        if (HitEnemy.Length != 0)
+        {            
+            checkClosedEnemy(HitEnemy);
+        }
+
+    }
 
     private void skill2()
     {
@@ -63,14 +72,43 @@ public class SkillAttack : MonoBehaviour
         }   
     }
 
-    private void checkClosedEnemy(RaycastHit2D[] _values)
+    private Transform checkClosedEnemy(RaycastHit2D[] _values)
     {
         int count = _values.Length;
+        float beforeDis = 0;
+        float minimumDis = 0;
+
+        if (count == 1)
+        {
+            return _values[0].transform;
+        } 
+
         for (int i = 0; i < count; i++)
         {
-            Vector2.Distance(transform.position, _values[i].transform.position);
-            
+            float _DisEnemy = Vector2.Distance(transform.position, _values[i].transform.position);//1 3 2
+            if (i == 0)
+            {
+                minimumDis = _DisEnemy;
+            }
+            else if (_DisEnemy < beforeDis)
+            {
+                minimumDis = _DisEnemy;
+            }
+
+            beforeDis = _DisEnemy;
         }
+
+        for(int x = 0; x < count; x++)
+        {
+            float _DisEnemy = Vector2.Distance(transform.position, _values[x].transform.position);
+
+            if (minimumDis == _DisEnemy)
+            {
+                Debug.Log(_values[x].transform.name);
+                return m_TrsTarget= _values[x].transform;
+            }
+        }
+        return null;
     }
   
 }
