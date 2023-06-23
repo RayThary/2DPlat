@@ -68,6 +68,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1576179151777753464}
   - component: {fileID: 9211584376081855411}
+  - component: {fileID: 94216249}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
@@ -143,3 +144,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &94216249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3878937375765179859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06caeaf261a62e54c9c6a1ce987986ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_fDaggerSpeed: 5
+  m_fArrowSpeed: 2
+  m_TrsArrow: {fileID: 0}
+  m_TrsTarget: {fileID: 0}
