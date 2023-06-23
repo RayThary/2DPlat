@@ -10,11 +10,10 @@ public class SkillAttack : MonoBehaviour
 
     [SerializeField] private Transform m_TrsArrow;//화살생성위치
     private Vector3 m_startPos;
-    private Transform m_TrsTarget;//범위안에있을경우 생성되서 범위안에있는 몬스터중 가장가까운 몬스터가 지정될만한곳
+    [SerializeField]private Transform m_TrsTarget;//범위안에있을경우 생성되서 범위안에있는 몬스터중 가장가까운 몬스터가 지정될만한곳
     
-
-    [SerializeField][Range(0, 1)] private float m_ArrowStartPos;
-    [SerializeField][Range(0, 1)] private float m_ArrowEndPos;
+    private float m_ArrowStartPos;
+    private float m_ArrowEndPos;
 
     int m_Angle;
     private void OnBecameInvisible()
@@ -41,10 +40,18 @@ public class SkillAttack : MonoBehaviour
         RaycastHit2D[] HitEnemy = Physics2D.CircleCastAll(transform.position, 5.0f, Vector3.up, 0f, LayerMask.GetMask("Enemy"));
 
         if (HitEnemy.Length != 0)
-        {            
+        {
             checkClosedEnemy(HitEnemy);
+            if (m_TrsTarget != null)
+            {
+                skill2();
+            }
         }
-
+        else
+        {
+            Debug.Log("범위안에 적이없습니다.");
+        }
+        
     }
 
     private void skill2()
