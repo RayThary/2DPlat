@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SkillAttack : MonoBehaviour
@@ -17,33 +18,38 @@ public class SkillAttack : MonoBehaviour
     private float m_ArrowStartPos;
     private float m_ArrowEndPos;
 
+    [Header("테스트용")]
+    private Rigidbody2D rig2d;
+    private Transform target;
+    
+    private bool check = false;
+
+
     int m_Angle;
 
     private void Start()
     {
         m_Angle = Random.Range(-1, 2);
         m_VecStart = transform.position;
-
+        //실험
+        rig2d= GetComponent<Rigidbody2D>();
+        target = GameObject.Find("Player").GetComponent<Transform>();
     }
 
     void Update()
     {
-        //arrowMove();
-        Vector2.Distance(transform.position, m_test.position);
-        //Vector2.MoveTowards()
-        //디스턴스
+        arrowMove();
     }
-
-
 
     private void arrowMove()
     {
-        
-        Vector3 m_EndPos = m_TrsTarget.position;
-        transform.Translate(m_TrsTarget.position * Time.deltaTime);
+        Vector3 dir = target.position - transform.position;
 
-        m_VecStart = m_VecStart + m_TrsTarget.position * Time.deltaTime*m_fArrowSpeed;
+        //transform.position = Vector2.MoveTowards(transform.position, target.position, m_fArrowSpeed * Time.deltaTime);
+        transform.position += dir * m_fArrowSpeed * Time.deltaTime;
 
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         /*곡선 실패나중에활용해볼가능성있음
          Vector3 m_startPos = m_TrsArrow.position;
          Vector3 m_EndPos = m_TrsTarget.position;

@@ -13,6 +13,7 @@ public class HitBoxParent : MonoBehaviour
         Enemy,
         Skill,
         PassWall,
+        Player,
     }
 
     public enum eHitBoxState

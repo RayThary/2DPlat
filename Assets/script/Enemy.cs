@@ -6,11 +6,17 @@ public class Enemy : MonoBehaviour
 {
     private Transform m_TrsBefore;
 
-    private bool m_PlayerCheck;
-    [SerializeField] private int NextMove;
-    private float timer =0;
+    [SerializeField] private float EnemySpeed = 1.0f;
+    [SerializeField]private bool m_PlayerCheck;
+
+    [SerializeField]private int NextMove=1;//다음움직임왼쪽오른쪽일지랜덤생성
+    [SerializeField]private float timer =0;
+    [Header("움직임바꾸는시간")]
     [SerializeField]private float ChangeTime = 4.0f;
     Rigidbody2D m_rig2d;
+
+    private Transform target;
+
     void Start()
     {
         m_rig2d= GetComponent<Rigidbody2D>();
@@ -21,9 +27,15 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         ChangeMove();
+        CheckPlayer();
+       
+    }
+
+    private void CheckPlayer()
+    {
         if (m_PlayerCheck == false)
         {
-            m_rig2d.velocity = new Vector2(NextMove * 4, m_rig2d.velocity.y);
+            m_rig2d.velocity = new Vector2(NextMove * EnemySpeed, m_rig2d.velocity.y);
 
             Vector2 frontVec = new Vector2(m_rig2d.position.x + NextMove, m_rig2d.position.y);
             RaycastHit2D rayHitGround = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Ground"));
@@ -33,11 +45,20 @@ public class Enemy : MonoBehaviour
                 NextMove *= -1;
             }
         }
-        if(m_PlayerCheck)
+        if (m_PlayerCheck)
         {
-
+            
+            m_rig2d.velocity = new Vector2(EnemySpeed, m_rig2d.velocity.y);
+            Vector3 dir = target.position - transform.position;
+            if(dir.x > 0)
+            {
+                transform.localScale=new Vector3(1.0f,1.0f, 1.0f);
+            }
+            else if (dir.x < 0)
+            {
+                transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+            }
         }
-
     }
     
     private void ChangeMove()
@@ -65,11 +86,25 @@ public class Enemy : MonoBehaviour
                 {
                     switch (_hitType)
                     {
-                        case HitBoxParent.HitType.Ground:
-
+                        case HitBoxParent.HitType.Player:
+                            if (_collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+                            {
+                                m_PlayerCheck = true;
+                            }
                             break;
-                        case HitBoxParent.HitType.Wall:
+                    }
+                }
+                break;
 
+            case HitBoxParent.eHitBoxState.Exit:
+                {
+                    switch (_hitType)
+                    {
+                        case HitBoxParent.HitType.Player:
+                            if (_collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+                            {
+                                m_PlayerCheck = false;
+                            }
                             break;
                     }
                 }
