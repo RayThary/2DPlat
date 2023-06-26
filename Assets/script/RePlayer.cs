@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RePlayer : MonoBehaviour
 {
-   
     [SerializeField, Tooltip("속도")] private float m_playerspeed = 4;
     [Header("점프관련")]
     [SerializeField,Tooltip("중력")] private float m_jumpGravity = 0f;
@@ -39,10 +39,11 @@ public class RePlayer : MonoBehaviour
     private Rigidbody2D m_rig2d;
 
     private Vector3 moveDir;
+    private UnityAction action = null;
 
     void Start()
     {
-        m_rig2d = GetComponent<Rigidbody2D>();   
+        m_rig2d = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -53,6 +54,17 @@ public class RePlayer : MonoBehaviour
         playerDash();
         jumpGravity();
     }
+
+    public void SetAction(UnityAction _action)
+    {
+        action += _action;
+    }
+
+    public void OnAction()
+    {
+        action?.Invoke();
+    }
+
     private void playerMove()
     {
         if (m_PlayerDashing)

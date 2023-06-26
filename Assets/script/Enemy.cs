@@ -17,10 +17,11 @@ public class Enemy : MonoBehaviour
 
     private Transform target;
 
+    [SerializeField] private bool Tester = false;
+
     void Start()
     {
         m_rig2d= GetComponent<Rigidbody2D>();
-        
     }
 
     // Update is called once per frame
@@ -28,7 +29,7 @@ public class Enemy : MonoBehaviour
     {
         ChangeMove();
         CheckPlayer();
-       
+
     }
 
     private void CheckPlayer()
@@ -49,12 +50,12 @@ public class Enemy : MonoBehaviour
         {
             
             m_rig2d.velocity = new Vector2(EnemySpeed, m_rig2d.velocity.y);
-            Vector3 dir = target.position - transform.position;
-            if(dir.x > 0)
+            Vector3 dir = target.position;
+            if(transform.position.x>dir.x)
             {
                 transform.localScale=new Vector3(1.0f,1.0f, 1.0f);
             }
-            else if (dir.x < 0)
+            else if (transform.position.x<dir.x)
             {
                 transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
             }
