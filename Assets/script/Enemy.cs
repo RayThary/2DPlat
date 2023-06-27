@@ -36,23 +36,28 @@ public class Enemy : MonoBehaviour
 
     private void CheckPlayer()
     {
+
+        //기본움직임
+        m_rig2d.velocity = new Vector2(NextMove * EnemySpeed, m_rig2d.velocity.y);
+        
+        Vector2 frontVec = new Vector2(m_rig2d.position.x + NextMove, m_rig2d.position.y);//내앞백터
+        RaycastHit2D rayHitGround = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Ground"));
+        RaycastHit2D rayHitSidWall = Physics2D.Raycast(frontVec, Vector3.zero, 1, LayerMask.GetMask("SideWall", "Enemy"));
+
+        if (rayHitGround.collider == null || rayHitSidWall.collider != null)
+        {
+            NextMove *= -1;
+        }
+        //플레이어 체크
         RaycastHit2D rayHitPlayer = Physics2D.CircleCast(transform.position, 5.0f, Vector3.up, 0f, LayerMask.GetMask("Player"));
 
-        if (rayHitPlayer.collider == null)
-        {
-            m_rig2d.velocity = new Vector2(NextMove * EnemySpeed, m_rig2d.velocity.y);
-            
-            Vector2 frontVec = new Vector2(m_rig2d.position.x + NextMove, m_rig2d.position.y);//내앞백터
-            RaycastHit2D rayHitGround = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Ground"));
-            RaycastHit2D rayHitSidWall = Physics2D.Raycast(frontVec, Vector3.zero, 1, LayerMask.GetMask("SideWall", "Enemy"));
-            if (rayHitGround.collider == null || rayHitSidWall.collider != null)
-            {
-                NextMove *= -1;
-            }
-        }
-        else if (rayHitPlayer.collider != null)
+        if (rayHitPlayer.collider != null)
         {
             m_PlayerCheck = true;
+        }
+
+        if (m_PlayerCheck)
+        {
             Vector3 dir = target.position;
             float f_right = 0.0f;
             if (transform.position.x > dir.x)
@@ -65,36 +70,13 @@ public class Enemy : MonoBehaviour
                 transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
                 f_right = -1;
             }
-        }
-
-
-
-        
-        if (m_PlayerCheck)
-        {
-            float f_right = 0.0f;
-            Vector3 dir = target.position;
-            if(transform.position.x>dir.x)
-            {
-                transform.localScale=new Vector3(1.0f,1.0f, 1.0f);
-                f_right = 1;
-            }
-            else if (transform.position.x<dir.x)
-            {
-                transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-                f_right = -1;
-            }
-            Vector2 frontVec = new Vector2(m_rig2d.position.x + NextMove, m_rig2d.position.y);
-            RaycastHit2D rayHitGround = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Ground"));
-            RaycastHit2D rayHitSidWall = Physics2D.Raycast(frontVec, Vector3.right, 1, LayerMask.GetMask("SideWall","Enemy"));
+            m_rig2d.velocity = new Vector2(f_right * EnemySpeed, m_rig2d.velocity.y);
+            
             if (rayHitGround.collider == null || rayHitSidWall.collider != null)
             {
                 f_right *= -1;
                 m_PlayerCheck = false;
             }
-            m_rig2d.velocity = new Vector2(EnemySpeed*f_right, m_rig2d.velocity.y);
-            
-
         }
     }
     

@@ -5,32 +5,16 @@ using UnityEngine;
 
 public class ArrowAttack : MonoBehaviour
 {
-
-    private RePlayer player;
     [SerializeField] private float m_fArrowSpeed = 2.0f;
-
-    
-    
     private Transform m_TrsTarget;
     [SerializeField] private Transform m_test;
 
     [SerializeField] private Transform m_TrsAroowAttackItem;
-    private float m_ArrowStartPos;
-    private float m_ArrowEndPos;
 
-    [Header("테스트용")]
-    private Rigidbody2D rig2d;
     private Transform target;
-    
-    private bool check = false;
-
-
-
 
     private void Start()
     {
-        //실험
-        rig2d= GetComponent<Rigidbody2D>();
         target = GameObject.Find("Player").GetComponent<Transform>();
         Destroy(gameObject, 7f);
     }

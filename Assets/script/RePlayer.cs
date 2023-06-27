@@ -13,7 +13,7 @@ public class RePlayer : MonoBehaviour
     private bool m_jumpcheck = false;
     private bool m_doublejump;
     private bool m_doublecheck = true;
-    private bool m_groundcheck = false;
+    [SerializeField]private bool m_groundcheck = false;
 
     [Header("플레이어 대쉬관련")]
 
@@ -34,7 +34,7 @@ public class RePlayer : MonoBehaviour
    [SerializeField] float dashLimitTimer = 0.2f;
 
     [SerializeField] private LayerMask GroundCheck;
-
+    private bool passCheck;
 
     private Rigidbody2D m_rig2d;
 
@@ -53,6 +53,7 @@ public class RePlayer : MonoBehaviour
         playerDoubleTapCheck();
         playerDash();
         jumpGravity();
+        passChecking();
     }
 
     public void SetAction(UnityAction _action)
@@ -227,6 +228,19 @@ public class RePlayer : MonoBehaviour
         m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, m_jumpGravity);
     }
 
+    private void passChecking()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, 1, LayerMask.GetMask("PassWall"));
+        if (hit.collider != null)
+        {
+            passCheck = true;
+            m_groundcheck = false;
+        }
+        if (hit.collider == null)
+        {
+            passCheck = false;
+        }
+    }
 
     public void OnTriggerPlayer(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
     {
@@ -238,13 +252,13 @@ public class RePlayer : MonoBehaviour
                     case HitBoxParent.HitType.Ground:
                         if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
                         {
-                            m_groundcheck = true;
-                            m_doublecheck = true;
+                            if (passCheck==false)
+                            {
+                                m_groundcheck = true;
+                                m_doublecheck = true;
+                            }
                         }
-                        if (_collision.gameObject.layer == LayerMask.NameToLayer("PassWall"))
-                        {
-                            m_groundcheck = false;
-                        }
+                       
 
                         break;
                     case HitBoxParent.HitType.Wall:
@@ -256,10 +270,11 @@ public class RePlayer : MonoBehaviour
                 switch (_hitType)
                 {
                     case HitBoxParent.HitType.Ground:
+                       
 
                         break;
                     case HitBoxParent.HitType.PassWall:
-
+                        
                         break;
                 }
                 break;
@@ -273,7 +288,7 @@ public class RePlayer : MonoBehaviour
                         }
                         break;
                     case HitBoxParent.HitType.PassWall:
-
+                        
                         break;
                 }
                 break;
