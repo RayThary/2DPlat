@@ -45,7 +45,7 @@ public class ArrowAttack : MonoBehaviour
 
     private void arrowMove()
     {
-        Vector3 dir = m_TrsTarget.position - transform.position;
+        Vector3 dir = (m_TrsTarget.position - transform.position).normalized;
 
         transform.position += dir * m_fArrowSpeed * Time.deltaTime;
 

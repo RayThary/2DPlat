@@ -16,8 +16,12 @@ public class basicSkill : MonoBehaviour
     private GameObject Dagger;
     [SerializeField]private float speed =2;
 
+    
+     
+    
     void Start()
     {
+        timer = 1.0f;
         checkAxe = true;
         checkDagger = false;
 
@@ -55,6 +59,8 @@ public class basicSkill : MonoBehaviour
     }
     private void axeAttack()
     {
+        timer += Time.deltaTime;
+
         if (checkAxe)
         {
             if (timer <= attdelay)
@@ -69,20 +75,15 @@ public class basicSkill : MonoBehaviour
             if (axeAttacking)
             {
                 anim.SetBool("AxeAttack", true);
-                //Invoke("axeOff", 0.2f);
+                timer = 0.0f;
                 axeAttacking = false;
             }
         }
 
     }
-
-    private void dahherAttack()
-    {
-
-    }
-
     private void axeOff()
     {
         anim.SetBool("AxeAttack", false);
     }
+  
 }
