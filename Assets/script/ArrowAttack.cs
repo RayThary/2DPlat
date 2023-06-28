@@ -15,6 +15,7 @@ public class ArrowAttack : MonoBehaviour
     private BoxCollider2D box2d;
 
     private float timer = 0.0f;
+    [SerializeField] private float changeTargetXY = 5;
     private bool changeTarget;
     private float changeTargetX;
     private float changeTargetY;
@@ -30,6 +31,7 @@ public class ArrowAttack : MonoBehaviour
     {
         EnemyCheck();
         changeTargetCheck();
+        
     }
 
    
@@ -111,19 +113,19 @@ public class ArrowAttack : MonoBehaviour
             changeTargetY = Random.Range(0, 2);
             if (changeTargetX == 0)
             {
-                changeTargetX = -5f;
+                changeTargetX = -changeTargetXY;
             }
             else if (changeTargetX == 1)
             {
-                changeTargetX = 5f;
+                changeTargetX = changeTargetXY;
             }
             if (changeTargetY == 0)
             {
-                changeTargetY = -5f;
+                changeTargetY = -changeTargetXY;
             }
             else if (changeTargetY == 1)
             {
-                changeTargetY = 5f;
+                changeTargetY = changeTargetXY;
             }
             changeTarget = false;
         }

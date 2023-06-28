@@ -25,11 +25,13 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+
+        //player = GameObject.Find("Player").GetComponent<RePlayer>();
+        player = FindObjectOfType<RePlayer>();
     }
 
     private void Start()
     {
-        player = GetComponent<RePlayer>();
         skillArrow = GetComponent<ArrowAttack>();
     }
 
@@ -64,4 +66,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SetPlayer(RePlayer _player)
+    {
+        player = _player;
+    }
+
+    public RePlayer GetPlayer()
+    {
+        return player;
+    }
+    public Transform GetPlayerTransform() 
+    {
+        return player.transform;
+    }
 }

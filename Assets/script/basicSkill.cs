@@ -105,7 +105,8 @@ public class basicSkill : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.A))
             {
                 timer += Time.deltaTime;
-                Instantiate(PreDagger, DaggerSpawn.position,transform.rotation);
+                Instantiate(PreDagger,DaggerSpawn.position,transform.rotation,SkillSpawn);
+                timer = 0;
             }
            
             

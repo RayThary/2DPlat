@@ -44,10 +44,12 @@ public class RePlayer : MonoBehaviour
     void Start()
     {
         m_rig2d = GetComponent<Rigidbody2D>();
+        GameManager.instance.SetPlayer(this);
     }
 
     void Update()
     {
+
         playerMove();
         jumpCheck();
         playerDoubleTapCheck();
