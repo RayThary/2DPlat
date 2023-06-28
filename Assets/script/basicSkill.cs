@@ -11,11 +11,14 @@ public class basicSkill : MonoBehaviour
     private bool checkDagger;
     private bool daggerAttacking;
     [SerializeField]private float attDaggerdelay=0.5f;
+    
 
     private float timer = 0.0f;
     [SerializeField]private Animator anim;
     private GameObject Axe;
     private GameObject Dagger;
+    [SerializeField] private GameObject PreDagger;
+    [SerializeField] private Transform DaggerSpawn;
 
     [SerializeField] private Transform SkillSpawn;
     
@@ -102,12 +105,9 @@ public class basicSkill : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.A))
             {
                 timer += Time.deltaTime;
-                daggerAttacking = true;
+                Instantiate(PreDagger, DaggerSpawn.position,transform.rotation);
             }
-            if (daggerAttacking)
-            {
-                Instantiate(Dagger, SkillSpawn);
-            }
+           
             
         }
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -7,17 +8,16 @@ public class Enemy : MonoBehaviour
     private Transform m_TrsBefore;
 
     [SerializeField] private float EnemySpeed = 1.0f;
-    [SerializeField]private bool m_PlayerCheck;
+    private bool m_PlayerCheck;
 
     [SerializeField]private int NextMove;//다음움직임왼쪽오른쪽일지랜덤생성
-    [SerializeField]private float timer =0;
+    private float timer =0;
     [Header("움직임바꾸는시간")]
     [SerializeField]private float ChangeTime = 8.0f;
     Rigidbody2D m_rig2d;
 
     private Transform target;
 
-    [SerializeField] private bool Tester = false;
 
     void Start()
     {

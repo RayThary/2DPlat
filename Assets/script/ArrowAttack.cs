@@ -7,35 +7,68 @@ public class ArrowAttack : MonoBehaviour
 {
     [SerializeField] private float m_fArrowSpeed = 2.0f;
     private Transform m_TrsTarget;
-    [SerializeField] private Transform m_test;
-
     [SerializeField] private Transform m_TrsAroowAttackItem;
 
     private Transform target;
+    private bool m_bThroughPlayer;
+
+    private BoxCollider2D box2d;
+
+    private float timer = 0.0f;
+    private bool changeTarget;
+    private float changeTargetX;
+    private float changeTargetY;
 
     private void Start()
     {
         target = GameObject.Find("Player").GetComponent<Transform>();
-        Destroy(gameObject, 7f);
+        box2d = GetComponent<BoxCollider2D>();
+        //Destroy(gameObject, 7f);
     }
 
     void Update()
     {
         EnemyCheck();
-        
+        changeTargetCheck();
     }
 
    
 
     private void arrowMove()
     {
-        Vector3 dir = (m_TrsTarget.position - transform.position).normalized;
+        Vector3 VecTargetdis = (m_TrsTarget.position - transform.position).normalized;
+        Vector3 VecChangeTarget = new Vector3(m_TrsTarget.position.x + changeTargetX, m_TrsTarget.position.y + changeTargetY, m_TrsTarget.position.z);
+        Vector3 VecChangeTargerdis = (VecChangeTarget - transform.position).normalized;
+        
+        
 
-        transform.position += dir * m_fArrowSpeed * Time.deltaTime;
-
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle, new Vector3(0.0f,0.0f,1.0f));
-
+        RaycastHit2D ThroughPlayer = Physics2D.BoxCast(box2d.bounds.center, box2d.size, 0f, Vector3.zero, 0, LayerMask.GetMask("Enemy"));
+        
+        if (ThroughPlayer.collider==null&&m_bThroughPlayer==false)
+        {
+            transform.position += VecTargetdis * m_fArrowSpeed * Time.deltaTime;
+            
+            float angle = Mathf.Atan2(VecTargetdis.y, VecTargetdis.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, new Vector3(0.0f, 0.0f, 1.0f));
+            
+        }
+        else
+        {
+            changeTarget = true;
+            if (timer < 1f)
+            {
+                m_bThroughPlayer = true;
+            }
+            else
+            {
+                m_bThroughPlayer = false;
+                timer = 0;
+            }   
+            transform.position += VecChangeTargerdis.normalized * m_fArrowSpeed * Time.deltaTime;
+            float angle = Mathf.Atan2(VecChangeTargerdis.y, VecChangeTargerdis.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, new Vector3(0.0f, 0.0f, 1.0f));
+        }
+        
         #region 실패나중에활용해볼가능성있음
         /*
         transform.position = Vector2.MoveTowards(transform.position, target.position, m_fArrowSpeed * Time.deltaTime);
@@ -65,6 +98,36 @@ public class ArrowAttack : MonoBehaviour
         */
         #endregion
     }
+    private void changeTargetCheck()
+    {
+        if (m_bThroughPlayer)
+        {
+            timer += Time.deltaTime;
+        }
+        if ( changeTarget&&m_bThroughPlayer==false)
+        {
+
+            changeTargetX = Random.Range(0, 2);
+            changeTargetY = Random.Range(0, 2);
+            if (changeTargetX == 0)
+            {
+                changeTargetX = -5f;
+            }
+            else if (changeTargetX == 1)
+            {
+                changeTargetX = 5f;
+            }
+            if (changeTargetY == 0)
+            {
+                changeTargetY = -5f;
+            }
+            else if (changeTargetY == 1)
+            {
+                changeTargetY = 5f;
+            }
+            changeTarget = false;
+        }
+    }
 
     private void EnemyCheck()
     {
@@ -77,7 +140,7 @@ public class ArrowAttack : MonoBehaviour
         }
         else 
         {
-            Destroy(this); 
+            //Destroy(this); 
         }
     }
 
