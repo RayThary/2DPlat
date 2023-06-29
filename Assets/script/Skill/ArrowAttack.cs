@@ -24,7 +24,7 @@ public class ArrowAttack : MonoBehaviour
     {
         target = GameObject.Find("Player").GetComponent<Transform>();
         box2d = GetComponent<BoxCollider2D>();
-        //Destroy(gameObject, 7f);
+        Destroy(gameObject, 10f);
     }
 
     void Update()
@@ -142,7 +142,7 @@ public class ArrowAttack : MonoBehaviour
         }
         else 
         {
-            //Destroy(this); 
+            Destroy(this); 
         }
     }
 
