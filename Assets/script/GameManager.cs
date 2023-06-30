@@ -58,12 +58,9 @@ public class GameManager : MonoBehaviour
 
         if (HitEnemy.Length != 0)
         {
-            Instantiate(Arrow);
+            
         }
-        else
-        {
-            Debug.Log("범위안에 적이없습니다.");//Instantiate안되는방법 ? 아님바로디스트로이
-        }
+        
     }
 
     public void SetPlayer(RePlayer _player)

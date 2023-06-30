@@ -21,7 +21,7 @@ public class MainCamera : MonoBehaviour
     void Start()
     {
         m_fheight= Camera.main.orthographicSize;
-        m_fwidth= m_fheight*Screen.width/Screen.height;
+        m_fwidth= m_fheight * Screen.width / Screen.height;
     }
 
     void FixedUpdate()

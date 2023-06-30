@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class basicSkill : MonoBehaviour
 {
+    [SerializeField]private Animator anim;
     private bool checkAxe;
     private bool axeAttacking;
     [SerializeField]private float attAxedelay=1.0f;
@@ -11,18 +12,16 @@ public class basicSkill : MonoBehaviour
     private bool checkDagger;
     private bool daggerAttacking;
     [SerializeField]private float attDaggerdelay=0.5f;
-    [SerializeField]public int DaggerCount=0;
+    public int DaggerCount=0;
+    public int ArrowCount = 0;
 
     private float timer = 0.0f;
-
-    [SerializeField]private Animator anim;
 
     private GameObject Axe;
     private GameObject Dagger;
     [SerializeField] private GameObject PreDagger;
     [SerializeField] private Transform DaggerSpawn;
-
-
+    [SerializeField] private GameObject PreArrow;
 
     [SerializeField] private Transform SkillSpawn;
     
@@ -118,9 +117,5 @@ public class basicSkill : MonoBehaviour
         }
     }
 
-    private void daggerInventory()
-    {
-
-    }
   
 }

@@ -8,21 +8,25 @@ public class Enemy : MonoBehaviour
     [Header("적 타입 1근접  2원거리  3미정   한개만체크해주세요")]
     [SerializeField] private bool Type1;
     [SerializeField] private bool Type2;
+    [SerializeField] private GameObject Type2AttackWeapon;
     [SerializeField] private bool Type3;
-
+    private BoxCollider2D box2d;
     private Transform m_TrsBefore;
 
     [SerializeField] private float EnemySpeed = 1.0f;
     private float beforeSpeed = 0.0f;
     private bool m_PlayerCheck;
-    [SerializeField] private float m_EnemyPlayerCheckRange = 5.0f;
+    [Header("적인지범위")]
+    [SerializeField] private float m_EnemyPlayerCheckRange = 5.0f;//Type1:5, Typ2:10 
 
-    private int NextMove;//다음움직임왼쪽오른쪽일지랜덤생성
-    private float timer =0;
+    [SerializeField]private int NextMove;//다음움직임왼쪽오른쪽일지랜덤생성
+    [SerializeField] private float timer =0;
     private float waittimer = 0;
     [Header("움직임바꾸는시간")]
     [SerializeField]private float ChangeTime = 8.0f;
-    Rigidbody2D m_rig2d;
+    [SerializeField]private bool falling;
+
+    private Rigidbody2D m_rig2d;
 
     private Transform target;
     private void OnDrawGizmos()
@@ -37,46 +41,56 @@ public class Enemy : MonoBehaviour
         NextMove = 1;
         m_rig2d = GetComponent<Rigidbody2D>();
         target = GameObject.Find("Player").GetComponent<Transform>();
+        box2d = GetComponent<BoxCollider2D>();
         beforeSpeed = EnemySpeed;
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         ChangeMove();
         CheckPlayer();
 
+        if (box2d.IsTouchingLayers(LayerMask.GetMask("FallingGround")))
+        {
+            falling = true;
+        }
+       
     }
 
+    
 
     private void CheckPlayer()
     {
-
-        //기본움직임
         m_rig2d.velocity = new Vector2(NextMove * EnemySpeed, m_rig2d.velocity.y);
-
         Vector2 frontVec = new Vector2(m_rig2d.position.x + NextMove, m_rig2d.position.y);// 이오브젝트 x+1의 위치
 
         RaycastHit2D rayHitGround = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Ground"));
         RaycastHit2D rayHitCheckWall = Physics2D.Raycast(frontVec, Vector3.zero, 1, LayerMask.GetMask("SideWall", "Enemy"));
-        RaycastHit2D rayHitFailling = Physics2D.Raycast(frontVec, Vector3.zero, 1, LayerMask.GetMask("FaillingWall"));
+        
 
-        Vector3 dir = target.position;//적의 위치
 
+        
         if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
         {
-            NextMove *= -1;
+            if (falling==false)
+            {
+                NextMove *= -1;
+            }
         }
-        if (rayHitFailling.collider != null)
+
+        if (rayHitGround.collider != null)
         {
-            NextMove *= -1;
+            falling = false;
         }
+      
+        
 
-       
-
-        //플레이어 체크
         RaycastHit2D rayHitPlayer = Physics2D.CircleCast(transform.position, m_EnemyPlayerCheckRange
             , Vector3.up, 0f, LayerMask.GetMask("Player"));
+
+
+        Vector3 dir = target.position;
 
         if (rayHitPlayer.collider != null)
         {
@@ -116,7 +130,7 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-        //원거리 공격을 하는 적 플레이어를 발견하면 플레이어위치로 삼지창을 던질것입니다.
+        //원거리 공격을 하는 적 플레이어를 발견하면 플레이어위치로 무기던지는적
         if (Type2)
         {
             if (transform.position.x > dir.x)
@@ -127,10 +141,10 @@ public class Enemy : MonoBehaviour
             else if (transform.position.x < dir.x)
             {
                 transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-
             }
+            
         }
-        //플레이어가 점프하면같이 점프하고아직미정
+        //플레이어가 따라하는 적
         if (Type3)
         {
 
@@ -154,6 +168,14 @@ public class Enemy : MonoBehaviour
                 timer = 0;
             }
         }
+        if (NextMove == 1)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        else if (NextMove == -1)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
 
     }
 
@@ -176,8 +198,6 @@ public class Enemy : MonoBehaviour
                     }
                 }
                 break;
-
-           
         }
     }
 
