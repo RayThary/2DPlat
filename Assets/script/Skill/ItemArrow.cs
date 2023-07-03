@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class ItemArrow : MonoBehaviour
 {
-    [SerializeField] private int addArrow = 5;
+    [SerializeField] private int addArrow = 2;
     private basicSkill basicSkill;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
-            basicSkill.DaggerCount = addArrow;
+            basicSkill.ArrowCount = addArrow;
             Destroy(gameObject);
         }
     }

@@ -104,12 +104,14 @@ MonoBehaviour:
   Type2: 0
   Type2AttackWeapon: {fileID: 0}
   Type3: 0
+  box2dChiled: {fileID: 0}
   EnemySpeed: 2
   m_EnemyPlayerCheckRange: 5
   NextMove: 0
   timer: 0
   ChangeTime: 8
   falling: 0
+  playerJumpCheck: 0
 --- !u!50 &2106515998071706747
 Rigidbody2D:
   serializedVersion: 4
@@ -144,7 +146,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.424264, y: -1.3456023}
+  m_Offset: {x: 1.4, y: -1.35}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -155,7 +157,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.69597244, y: 1.920176}
+  m_Size: {x: 0.7, y: 2}
   m_EdgeRadius: 0
 --- !u!70 &2106515998071706749
 CapsuleCollider2D:

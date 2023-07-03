@@ -20,7 +20,7 @@ public class basicSkill : MonoBehaviour
     private GameObject Axe;
     private GameObject Dagger;
     [SerializeField] private GameObject PreDagger;
-    [SerializeField] private Transform DaggerSpawn;
+    [SerializeField] private Transform TrsSkillSpawn;
     [SerializeField] private GameObject PreArrow;
 
     [SerializeField] private Transform SkillSpawn;
@@ -47,7 +47,7 @@ public class basicSkill : MonoBehaviour
         checkWeapon();
         axeAttack();
         daggerAttack();
-
+        arrowAttack();
     }
     
     private void checkWeapon()
@@ -109,7 +109,7 @@ public class basicSkill : MonoBehaviour
             {
                 DaggerCount--;
                 timer += Time.deltaTime;
-                Instantiate(PreDagger,DaggerSpawn.position,transform.rotation,SkillSpawn);
+                Instantiate(PreDagger,SkillSpawn.position,transform.rotation,SkillSpawn);
                 timer = 0;
             }
            
@@ -117,5 +117,14 @@ public class basicSkill : MonoBehaviour
         }
     }
 
-  
+    private void arrowAttack()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            
+            ArrowCount--;
+            Instantiate(PreArrow, TrsSkillSpawn.position, transform.rotation, SkillSpawn);
+        }
+        
+    }
 }

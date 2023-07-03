@@ -7,14 +7,14 @@ public class RePlayer : MonoBehaviour
 {
     [SerializeField, Tooltip("속도")] private float m_playerspeed = 4;
     [Header("점프관련")]
-    [SerializeField,Tooltip("중력")] private float m_jumpGravity = 0f;
+    private float m_jumpGravity = 0f;
     [SerializeField,Tooltip("점프력")] private float m_playerjump = 5f;
     private float m_gravity = 9.81f;
     private bool m_jumpcheck = false;
     private bool m_doublejump;
     private bool m_doublecheck = true;
     [SerializeField]private bool m_groundcheck = false;
-
+    
     [Header("플레이어 대쉬관련")]
 
     private bool m_playerDash;
@@ -41,9 +41,6 @@ public class RePlayer : MonoBehaviour
     private Vector3 moveDir;
     private UnityAction action = null;
 
-    private int nextstage = 2;
-    private int stage=1;
-
     void Start()
     {
         m_rig2d = GetComponent<Rigidbody2D>();
@@ -58,7 +55,7 @@ public class RePlayer : MonoBehaviour
         playerDash();
         jumpGravity();
         passChecking();
-        stageChange();
+        
     }
 
     public void SetAction(UnityAction _action)
@@ -225,7 +222,7 @@ public class RePlayer : MonoBehaviour
                 if (m_jumpGravity > 0)
                 {
                     m_jumpGravity = 0;
-
+                   
                 }
             }
         }
@@ -246,17 +243,21 @@ public class RePlayer : MonoBehaviour
             passCheck = false;
         }
     }
-    private void stageChange()
-    {
-        stage = GameManager.instance.nowStage;
-        if (stage == nextstage)
-        {
-            nextstage++;
-            Vector3 nextPos =  GameManager.instance.GetStageTransform(nextstage).position;
-            gameObject.transform.position = nextPos;
-        }
-    }
    
+    public bool Type3Check(bool _value)
+    {
+        if(m_groundcheck)
+        {
+            if(Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                return _value = true;
+            }
+        }
+        return _value = false;
+        
+    }
+
+
     public void OnTriggerPlayer(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
     {
         switch (_state)
@@ -273,11 +274,15 @@ public class RePlayer : MonoBehaviour
                                 m_doublecheck = true;
                             }
                         }
-                       
 
                         break;
-                    case HitBoxParent.HitType.Wall:
-
+                    case HitBoxParent.HitType.Enemy:
+                        {
+                            if (_collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                            {
+                                Destroy(gameObject);
+                            }
+                        }
                         break;
                 }
                 break;

@@ -7,7 +7,9 @@ public class StageChange : MonoBehaviour
 {
     public int stage;
     private BoxCollider2D  box2d;
-    [SerializeField] private Transform TrsNextStage;
+    [SerializeField] private GameObject NextStageStart;
+    [SerializeField] private GameObject PlayerObj;
+
     private void Awake()
     {
         stage = 1;
@@ -19,13 +21,12 @@ public class StageChange : MonoBehaviour
 
     void Update()
     {
-        if (box2d.IsTouchingLayers(LayerMask.GetMask("Player")))
+        
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                stage++;
-            }
+            stage++;
+            PlayerObj.transform.position = NextStageStart.transform.position;
         }
-                GameManager.instance.nowStage = stage;
+        GameManager.instance.nowStage = stage;
     }
 }

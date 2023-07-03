@@ -27,23 +27,42 @@ public class Enemy : MonoBehaviour
     [SerializeField]private float ChangeTime = 8.0f;
     [SerializeField]private bool falling;
 
+    private bool  m_bReCheckPlayer;
+    private float m_fChecktimer=0.0f;
+    private float m_fReCheckPlayerTimer = 3.0f;
+
     private Rigidbody2D m_rig2d;
 
     private Transform target;
+
+
+    //적 점프관련
+    [SerializeField]private bool playerJumpCheck;
+    private float jumpGravity = 0.0f;
+    private float jumpingPower=5.0f;
+    private RePlayer player;
+    private float m_gravity = 9.81f;
+    private bool GroundCheck;
+    private bool oneJump;
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
 
         Gizmos.DrawWireSphere(transform.position, m_EnemyPlayerCheckRange);
+        
+        
     }
 
     void Start()
     {
+        player = GameManager.instance.GetPlayer();
         NextMove = 1;
         m_rig2d = GetComponent<Rigidbody2D>();
         //target = GameObject.Find("Player").GetComponent<Transform>();
         target = GameManager.instance.GetPlayerTransform();
-        box2d = GetComponent<BoxCollider2D>();
+        box2d = transform.Find("CheckFalling").GetComponent<BoxCollider2D>();
+        
         beforeSpeed = EnemySpeed;
     }
 
@@ -52,12 +71,9 @@ public class Enemy : MonoBehaviour
     {
         ChangeMove();
         CheckPlayer();
-
-        if (box2d.IsTouchingLayers(LayerMask.GetMask("FallingGround")))
-        {
-            falling = true;
-        }
-       
+        reCheckPlayer();
+        Type3Move();
+        CheckFalling();
     }
 
     
@@ -129,44 +145,117 @@ public class Enemy : MonoBehaviour
                 {
                     f_right *= -1;
                     m_PlayerCheck = false;
+                    m_bReCheckPlayer = true;
                 }
             }
         }
         //원거리 공격을 하는 적 플레이어를 발견하면 플레이어위치로 무기던지는적
         if (Type2)
         {
-            Vector2 m_center = (transform.position + target.position) * 0.5f;
-            RaycastHit2D hitGround = Physics2D.Raycast(m_center, transform.position - target.position, 8f,
-                LayerMask.GetMask("Ground,FallinWall"));
-            
-            if (hitGround.collider != null)
+            if (m_PlayerCheck)
             {
-                Debug.Log("ground check");
-            }
-            if (transform.position.x > dir.x)
-            {
-                transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                Vector2 m_center = (transform.position + target.position) * 0.5f;
+                RaycastHit2D hitGround = Physics2D.Raycast(m_center, transform.position - target.position, 8f,
+                    LayerMask.GetMask("Ground,FallinWall"));
 
+                if (hitGround.collider != null)
+                {
+                    Debug.Log("ground check");
+                }
+                if (transform.position.x > dir.x)
+                {
+                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+
+                }
+                else if (transform.position.x < dir.x)
+                {
+                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                }
+                Instantiate(Type2AttackWeapon);
+                if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+                {
+
+                }
+                m_rig2d.velocity = new Vector2(NextMove, m_rig2d.velocity.y);
             }
-            else if (transform.position.x < dir.x)
-            {
-                transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            }
-            Instantiate(Type2AttackWeapon);
-            if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
-            {
-                
-            }
-            m_rig2d.velocity = new Vector2(NextMove, m_rig2d.velocity.y);
         }
         //플레이어가 따라하는 적
         if (Type3)
         {
+            if (m_PlayerCheck)
+            {
+                playerJumpCheck= player.Type3Check(playerJumpCheck);
+                if (playerJumpCheck)
+                {
+                    jumpGravity = jumpingPower;
+                    oneJump = true;
+                }
+                float f_right = 0.0f;
 
+                if (transform.position.x > dir.x)
+                {
+                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                    f_right = -1;
+                }
+                else if (transform.position.x < dir.x)
+                {
+                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    f_right = 1;
+                }
+
+                m_rig2d.velocity = new Vector2(f_right * EnemySpeed * 2, m_rig2d.velocity.y);
+
+                if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+                {
+                    f_right *= -1;
+                    m_PlayerCheck = false;
+                    m_bReCheckPlayer = true;
+                }
+            }
+        }
+    }
+    private void Type3Move()
+    {
+        if (oneJump == false)
+        {
+            return;
+        }
+
+        jumpGravity -= m_gravity * Time.deltaTime;
+
+        m_rig2d.velocity = new Vector2(m_rig2d.velocity.x, jumpGravity);
+        if (GroundCheck == false)
+        {
+            if (jumpGravity < -10f)
+            {
+                jumpGravity = -10;
+            }
+        }
+        else
+        { 
+            if (jumpGravity > 0)
+            {
+                jumpGravity += m_gravity * 3 * Time.deltaTime;
+                if (jumpGravity > 0)
+                {
+                    jumpGravity = 0;
+                    oneJump = false;
+                }
+            }
         }
     }
     
- 
+    private void reCheckPlayer()
+    {
+        if (m_bReCheckPlayer)
+        {
+            m_fChecktimer += Time.deltaTime;
+            if (m_fChecktimer >= m_fReCheckPlayerTimer)
+            {
+                m_bReCheckPlayer = false;
+            }
+        }
+    }
 
     private void ChangeMove()
     {
@@ -194,7 +283,14 @@ public class Enemy : MonoBehaviour
 
     }
 
-    
+    private void CheckFalling()
+    {
+        RaycastHit2D fall = Physics2D.BoxCast(box2d.bounds.center, box2d.size, 0, Vector2.zero, 1f, LayerMask.GetMask("FallingGround"));
+        if(fall.collider != null)
+        {
+            falling = true;
+        }
+    }
 
     public void OnTriggerEnemy(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
     {
@@ -205,9 +301,32 @@ public class Enemy : MonoBehaviour
                     switch (_hitType)
                     {
                         case HitBoxParent.HitType.Player:
-                            if (_collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+                            
+                            break;
+                    }
+                }
+                break;
+                case HitBoxParent.eHitBoxState.Stay:
+                {
+                    switch (_hitType) 
+                    {
+                        case HitBoxParent.HitType.Ground:
+                            if(_collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
                             {
-                                m_PlayerCheck = true;
+                                GroundCheck = true;
+                            }
+                            break;
+                    }
+                }
+                break;
+            case HitBoxParent.eHitBoxState.Exit:
+                {
+                    switch (_hitType)
+                    {
+                        case HitBoxParent.HitType.Ground:
+                            if (_collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                            {
+                                GroundCheck = false;
                             }
                             break;
                     }

@@ -32,6 +32,7 @@ public class DaggerMove : MonoBehaviour
         else
         {
             transform.Translate(transform.right *-1* daggerSpeed * Time.deltaTime);
+            transform.localScale = new Vector3(-1, 0, 0);
         }
     }
 }

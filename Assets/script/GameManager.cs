@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LayerMask m_Player;//아직안씀
 
     public int nowStage;
-    [SerializeField]private Transform[] NextStageStartTrs;
+   
 
     private void Awake()
     {
@@ -43,9 +43,13 @@ public class GameManager : MonoBehaviour
     {
         return player.transform;
     }
-
-    public Transform GetStageTransform(int _value)
+    //게임종료 아직안씀
+    private void GameExit()
     {
-        return NextStageStartTrs[_value];
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+                    Application.Quit();
+#endif
     }
 }

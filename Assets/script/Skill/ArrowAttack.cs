@@ -133,7 +133,7 @@ public class ArrowAttack : MonoBehaviour
 
     private void EnemyCheck()
     {
-        RaycastHit2D[] HitEnemy = Physics2D.CircleCastAll(target.position, 5.0f, Vector3.up, 0f, LayerMask.GetMask("Enemy"));//위치지정필요
+        RaycastHit2D[] HitEnemy = Physics2D.CircleCastAll(target.position, 10.0f, Vector3.up, 0f, LayerMask.GetMask("Enemy"));//위치지정필요
 
         if (HitEnemy.Length != 0)
         {
