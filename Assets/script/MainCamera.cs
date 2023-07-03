@@ -11,7 +11,8 @@ public class MainCamera : MonoBehaviour
     public Vector2 size;
     private float m_fheight;
     private float m_fwidth;
-
+    private int NextStage=2;
+    [SerializeField]private int Nowstage=1;
 
     private void OnDrawGizmos()
     {
@@ -22,10 +23,18 @@ public class MainCamera : MonoBehaviour
     {
         m_fheight= Camera.main.orthographicSize;
         m_fwidth= m_fheight * Screen.width / Screen.height;
+        
     }
+  
 
     void FixedUpdate()
     {
+        Nowstage = GameManager.instance.nowStage;
+        if (Nowstage == NextStage)
+        {
+            center.x += 100;
+            NextStage++;
+        }
         transform.position = Vector3.Lerp(transform.position, playerTrs.position, Time.deltaTime * CameraMove);
 
         float Ix = size.x * 0.5f - m_fwidth;

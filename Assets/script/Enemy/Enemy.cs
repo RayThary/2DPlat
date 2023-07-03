@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [Header("적 타입 1근접  2원거리  3미정   한개만체크해주세요")]
+    [Header("한개만체크해주세요")]
+    [Header("적 타입 1근접  2원거리  3미정")]
     [SerializeField] private bool Type1;
     [SerializeField] private bool Type2;
     [SerializeField] private GameObject Type2AttackWeapon;
@@ -40,7 +41,8 @@ public class Enemy : MonoBehaviour
     {
         NextMove = 1;
         m_rig2d = GetComponent<Rigidbody2D>();
-        target = GameObject.Find("Player").GetComponent<Transform>();
+        //target = GameObject.Find("Player").GetComponent<Transform>();
+        target = GameManager.instance.GetPlayerTransform();
         box2d = GetComponent<BoxCollider2D>();
         beforeSpeed = EnemySpeed;
     }
@@ -133,6 +135,14 @@ public class Enemy : MonoBehaviour
         //원거리 공격을 하는 적 플레이어를 발견하면 플레이어위치로 무기던지는적
         if (Type2)
         {
+            Vector2 m_center = (transform.position + target.position) * 0.5f;
+            RaycastHit2D hitGround = Physics2D.Raycast(m_center, transform.position - target.position, 8f,
+                LayerMask.GetMask("Ground,FallinWall"));
+            
+            if (hitGround.collider != null)
+            {
+                Debug.Log("ground check");
+            }
             if (transform.position.x > dir.x)
             {
                 transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
@@ -142,7 +152,12 @@ public class Enemy : MonoBehaviour
             {
                 transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             }
-            
+            Instantiate(Type2AttackWeapon);
+            if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+            {
+                
+            }
+            m_rig2d.velocity = new Vector2(NextMove, m_rig2d.velocity.y);
         }
         //플레이어가 따라하는 적
         if (Type3)

@@ -41,6 +41,9 @@ public class RePlayer : MonoBehaviour
     private Vector3 moveDir;
     private UnityAction action = null;
 
+    private int nextstage = 2;
+    private int stage=1;
+
     void Start()
     {
         m_rig2d = GetComponent<Rigidbody2D>();
@@ -49,13 +52,13 @@ public class RePlayer : MonoBehaviour
 
     void Update()
     {
-
         playerMove();
         jumpCheck();
         playerDoubleTapCheck();
         playerDash();
         jumpGravity();
         passChecking();
+        stageChange();
     }
 
     public void SetAction(UnityAction _action)
@@ -243,7 +246,17 @@ public class RePlayer : MonoBehaviour
             passCheck = false;
         }
     }
-
+    private void stageChange()
+    {
+        stage = GameManager.instance.nowStage;
+        if (stage == nextstage)
+        {
+            nextstage++;
+            Vector3 nextPos =  GameManager.instance.GetStageTransform(nextstage).position;
+            gameObject.transform.position = nextPos;
+        }
+    }
+   
     public void OnTriggerPlayer(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
     {
         switch (_state)
