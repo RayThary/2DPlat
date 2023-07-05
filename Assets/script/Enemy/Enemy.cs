@@ -35,6 +35,8 @@ public class Enemy : MonoBehaviour
 
     private Transform target;
 
+    [SerializeField]private int m_fEnemyHp=5;
+
 
     //적 점프관련
     [SerializeField]private bool playerJumpCheck;
@@ -45,6 +47,8 @@ public class Enemy : MonoBehaviour
     private bool GroundCheck;
     private bool oneJump;
 
+    private bool AxeAttackCheck;
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -53,7 +57,7 @@ public class Enemy : MonoBehaviour
         
         
     }
-
+    //axe 가 내려찍을때 플레이어에서 bool값 true 해주고 true 됬을때 닿아있는게 axe면 axe 에서 damege만큼 빼준다
     void Start()
     {
         player = GameManager.instance.GetPlayer();
@@ -74,9 +78,10 @@ public class Enemy : MonoBehaviour
         reCheckPlayer();
         Type3Move();
         CheckFalling();
+        EnemyHp();
+       
     }
 
-    
 
     private void CheckPlayer()
     {
@@ -85,9 +90,6 @@ public class Enemy : MonoBehaviour
 
         RaycastHit2D rayHitGround = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Ground"));
         RaycastHit2D rayHitCheckWall = Physics2D.Raycast(frontVec, Vector3.zero, 1, LayerMask.GetMask("SideWall", "Enemy"));
-        
-
-
         
         if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
         {
@@ -101,12 +103,9 @@ public class Enemy : MonoBehaviour
         {
             falling = false;
         }
-      
-        
 
         RaycastHit2D rayHitPlayer = Physics2D.CircleCast(transform.position, m_EnemyPlayerCheckRange
             , Vector3.up, 0f, LayerMask.GetMask("Player"));
-
 
         Vector3 dir = target.position;
 
@@ -290,6 +289,14 @@ public class Enemy : MonoBehaviour
         {
             falling = true;
         }
+    }
+    public void EnemyHp()
+    {
+        if (m_fEnemyHp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        //GameManager.instance.GetPlayerAttack(AxeAttackCheck);
     }
 
     public void OnTriggerEnemy(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)

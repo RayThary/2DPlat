@@ -109,7 +109,7 @@ public class basicSkill : MonoBehaviour
             {
                 DaggerCount--;
                 timer += Time.deltaTime;
-                Instantiate(PreDagger,SkillSpawn.position,transform.rotation,SkillSpawn);
+                Instantiate(PreDagger,TrsSkillSpawn.position,transform.rotation,SkillSpawn);
                 timer = 0;
             }
            

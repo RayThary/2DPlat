@@ -11,7 +11,7 @@ public class ItemArrow : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            basicSkill.ArrowCount = addArrow;
+            basicSkill.ArrowCount += addArrow;
             Destroy(gameObject);
         }
     }

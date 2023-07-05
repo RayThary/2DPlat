@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+public enum eScene
+{
+    main,
+    Tutorial,
+    game
+}
 
 public class MainScene : MonoBehaviour
 {
     public static MainScene instance;
 
     [SerializeField] private Button BtnStart;
-    public enum eScene 
-    { 
-        main,
-        game
-    }
 
     private void Awake()
     {
@@ -25,7 +26,7 @@ public class MainScene : MonoBehaviour
         {
             Destroy(this);
         }
-        BtnStart.onClick.AddListener(()=>LoadScene(eScene.game));
+        BtnStart.onClick.AddListener(()=>LoadScene(eScene.Tutorial));
     }
 
     void Start()

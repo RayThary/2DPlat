@@ -7,21 +7,29 @@ using UnityEngine;
 
 public class ItemDagger : MonoBehaviour
 {
-
     [SerializeField]private int addDagger = 5;
     private basicSkill basicSkill;
 
+    [SerializeField] private float moveMax = 0.2f;
+    [SerializeField] private float speed = 2f;
+    private Vector3 itemPos;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag=="Player")
         {
-            basicSkill.DaggerCount = addDagger;
+            basicSkill.DaggerCount += addDagger;
             Destroy(gameObject);
         }
     }
     private void Start()
     {
         basicSkill = FindObjectOfType<basicSkill>();
+        itemPos = transform.position;
     }
-   
+    private void Update()
+    {
+        Vector3 dirPos = itemPos;
+        dirPos.y = itemPos.y + moveMax * Mathf.Sin(Time.time * speed);
+        transform.position = dirPos;
+    }
 }

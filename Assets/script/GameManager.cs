@@ -43,6 +43,12 @@ public class GameManager : MonoBehaviour
     {
         return player.transform;
     }
+
+    public bool GetPlayerAttack()
+    {
+        return player.AxeAttack;
+    }
+
     //게임종료 아직안씀
     private void GameExit()
     {

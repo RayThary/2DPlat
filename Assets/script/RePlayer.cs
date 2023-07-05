@@ -8,13 +8,13 @@ public class RePlayer : MonoBehaviour
     [SerializeField, Tooltip("속도")] private float m_playerspeed = 4;
     [Header("점프관련")]
     private float m_jumpGravity = 0f;
-    [SerializeField,Tooltip("점프력")] private float m_playerjump = 5f;
+    [SerializeField, Tooltip("점프력")] private float m_playerjump = 5f;
     private float m_gravity = 9.81f;
     private bool m_jumpcheck = false;
     private bool m_doublejump;
     private bool m_doublecheck = true;
-    [SerializeField]private bool m_groundcheck = false;
-    
+    [SerializeField] private bool m_groundcheck = false;
+
     [Header("플레이어 대쉬관련")]
 
     private bool m_playerDash;
@@ -31,7 +31,7 @@ public class RePlayer : MonoBehaviour
     [SerializeField] private float playerDashLimit = 0.2f;
 
     float timer = 0.0f;//대시를 하는시간
-   [SerializeField] float dashLimitTimer = 0.2f;
+    [SerializeField] float dashLimitTimer = 0.2f;
 
     [SerializeField] private LayerMask GroundCheck;
     private bool passCheck;
@@ -41,8 +41,12 @@ public class RePlayer : MonoBehaviour
     private Vector3 moveDir;
     private UnityAction action = null;
 
+    public bool AxeAttack;
+    [SerializeField] private int axeDamege = 5;
+    
     void Start()
     {
+
         m_rig2d = GetComponent<Rigidbody2D>();
         GameManager.instance.SetPlayer(this);
     }
@@ -55,7 +59,7 @@ public class RePlayer : MonoBehaviour
         playerDash();
         jumpGravity();
         passChecking();
-        
+
     }
 
     public void SetAction(UnityAction _action)
@@ -123,7 +127,7 @@ public class RePlayer : MonoBehaviour
             m_PlayerRightDash = false;
             m_PlayerLeftDash = false;
         }
-        if (m_PlayerDoubleTap==false)
+        if (m_PlayerDoubleTap == false)
         {
             playerDashTimer = 0;
         }
@@ -222,7 +226,7 @@ public class RePlayer : MonoBehaviour
                 if (m_jumpGravity > 0)
                 {
                     m_jumpGravity = 0;
-                   
+
                 }
             }
         }
@@ -243,21 +247,28 @@ public class RePlayer : MonoBehaviour
             passCheck = false;
         }
     }
-   
+
     public bool Type3Check(bool _value)
     {
-        if(m_groundcheck)
+        if (m_groundcheck)
         {
-            if(Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 return _value = true;
             }
         }
         return _value = false;
-        
+
     }
 
-
+    private void AxeAttackOn()
+    {
+        AxeAttack = true;
+    }
+    private void AxeAttackOff() 
+    {
+        AxeAttack = false;
+    }
     public void OnTriggerPlayer(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
     {
         switch (_state)
