@@ -16,10 +16,7 @@ public class AxeDamage : MonoBehaviour
 
     void Update()
     {
-        attackOn();
+       
     }
-    private void attackOn()
-    {
-        
-    }
+  
 }

@@ -35,8 +35,9 @@ public class Enemy : MonoBehaviour
 
     private Transform target;
 
-    [SerializeField]private int m_fEnemyHp=5;
-
+    [SerializeField] private int m_fEnemyType1Hp = 5;
+    [SerializeField] private int m_fEnemyType2Hp = 5;
+    [SerializeField] private int m_fEnemyType3Hp = 5;
 
     //적 점프관련
     [SerializeField]private bool playerJumpCheck;
@@ -79,7 +80,7 @@ public class Enemy : MonoBehaviour
         Type3Move();
         CheckFalling();
         EnemyHp();
-       
+        
     }
 
 
@@ -290,13 +291,48 @@ public class Enemy : MonoBehaviour
             falling = true;
         }
     }
-    public void EnemyHp()
+   
+    public int EnemyHpCheck(int _value)
     {
-        if (m_fEnemyHp <= 0)
+        if (Type1)
         {
-            Destroy(gameObject);
+            return m_fEnemyType1Hp -= _value;
+           
         }
-        //GameManager.instance.GetPlayerAttack(AxeAttackCheck);
+        if (Type2)
+        {
+            return m_fEnemyType2Hp -= _value;
+        }
+        if (Type3)
+        {
+            return m_fEnemyType3Hp -= _value;
+        }
+        return _value;
+    }
+
+    private void EnemyHp()
+    {
+        if (Type1)
+        {
+            if (m_fEnemyType1Hp <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+        if (Type2)
+        {
+            if (m_fEnemyType2Hp <= 0)
+            {
+                Destroy (gameObject);
+            }
+        }
+        if (Type3)
+        {
+            if (m_fEnemyType3Hp <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     public void OnTriggerEnemy(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)

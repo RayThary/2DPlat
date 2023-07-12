@@ -43,6 +43,8 @@ public class RePlayer : MonoBehaviour
 
     public bool AxeAttack;
     [SerializeField] private int axeDamege = 5;
+    [SerializeField] private int daggerDamege = 5;
+    [SerializeField] private int arrowDamege = 5;
     
     void Start()
     {
@@ -247,7 +249,11 @@ public class RePlayer : MonoBehaviour
             passCheck = false;
         }
     }
-
+    /// <summary>
+    /// 플레이어가 점프하면 같이하는 용도로만듦.
+    /// </summary>
+    /// <param name="_value"></param>
+    /// <returns></returns>
     public bool Type3Check(bool _value)
     {
         if (m_groundcheck)
@@ -260,6 +266,8 @@ public class RePlayer : MonoBehaviour
         return _value = false;
 
     }
+
+
 
     private void AxeAttackOn()
     {
@@ -291,7 +299,8 @@ public class RePlayer : MonoBehaviour
                         {
                             if (_collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                             {
-                                Destroy(gameObject);
+                                //Destroy(gameObject);
+                                Debug.Log("dead");
                             }
                         }
                         break;
