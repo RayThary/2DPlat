@@ -232,10 +232,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32da3faaab2d33a4c8280d505d4069e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type1: 0
-  Type2: 0
   Type2AttackWeapon: {fileID: 0}
-  Type3: 1
+  EnemyType: 2
   EnemySpeed: 2
   m_EnemyPlayerCheckRange: 5
   NextMove: 0

@@ -100,16 +100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32da3faaab2d33a4c8280d505d4069e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type1: 1
-  Type2: 0
   Type2AttackWeapon: {fileID: 1628179057140943705, guid: 4c889f98148ac5b4eb29596c1512200a, type: 3}
-  Type3: 0
+  EnemyType: 1
   EnemySpeed: 0.5
   m_EnemyPlayerCheckRange: 9
   NextMove: 0
   timer: 0
   ChangeTime: 8
   falling: 0
+  playerJumpCheck: 0
 --- !u!50 &2482582518180354741
 Rigidbody2D:
   serializedVersion: 4

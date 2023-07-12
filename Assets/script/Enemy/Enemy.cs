@@ -7,10 +7,18 @@ public class Enemy : MonoBehaviour
 {
     [Header("한개만체크해주세요")]
     [Header("적 타입 1근접  2원거리  3미정")]
-    [SerializeField] private bool Type1;
-    [SerializeField] private bool Type2;
     [SerializeField] private GameObject Type2AttackWeapon;
-    [SerializeField] private bool Type3;
+    public enum eType 
+    {
+        Type1,
+        Type2,
+        Type3,
+    }
+
+    public eType EnemyType;
+
+    [SerializeField]private int[] arrEnemyHp = { 5, 5, 5 };
+    private int EnemyHp;
     private BoxCollider2D box2d;
     private Transform m_TrsBefore;
 
@@ -35,10 +43,6 @@ public class Enemy : MonoBehaviour
 
     private Transform target;
 
-    [SerializeField] private int m_fEnemyType1Hp = 5;
-    [SerializeField] private int m_fEnemyType2Hp = 5;
-    [SerializeField] private int m_fEnemyType3Hp = 5;
-
     //적 점프관련
     [SerializeField]private bool playerJumpCheck;
     private float jumpGravity = 0.0f;
@@ -61,6 +65,18 @@ public class Enemy : MonoBehaviour
     //axe 가 내려찍을때 플레이어에서 bool값 true 해주고 true 됬을때 닿아있는게 axe면 axe 에서 damege만큼 빼준다
     void Start()
     {
+        if (EnemyType == eType.Type1)
+        {
+            EnemyHp = arrEnemyHp[0];
+        }
+        if (EnemyType == eType.Type2)
+        {
+            EnemyHp = arrEnemyHp[1];
+        }
+        if (EnemyType == eType.Type3)
+        {
+            EnemyHp = arrEnemyHp[2];
+        }
         player = GameManager.instance.GetPlayer();
         NextMove = 1;
         m_rig2d = GetComponent<Rigidbody2D>();
@@ -79,7 +95,6 @@ public class Enemy : MonoBehaviour
         reCheckPlayer();
         Type3Move();
         CheckFalling();
-        EnemyHp();
         
     }
 
@@ -118,9 +133,14 @@ public class Enemy : MonoBehaviour
         {
             m_PlayerCheck = false;
         }
+        //아래이동부분 스위치문으로 줄여놓기
+
+        //switch (EnemyType)
+        //{ 
+        //}
 
         //플레이어가 범위안에 들어오면 플레이어방향으로 2배빠른속도로 달려온다 벽에닿으면 그대로 뒤로돌아간다 그리고 범위밖으로나가도 간다.
-        if (Type1)
+        if (EnemyType == eType.Type1)
         {
             if (m_PlayerCheck)
             {
@@ -150,7 +170,7 @@ public class Enemy : MonoBehaviour
             }
         }
         //원거리 공격을 하는 적 플레이어를 발견하면 플레이어위치로 무기던지는적
-        if (Type2)
+        if (EnemyType == eType.Type2)
         {
             if (m_PlayerCheck)
             {
@@ -180,7 +200,7 @@ public class Enemy : MonoBehaviour
             }
         }
         //플레이어가 따라하는 적
-        if (Type3)
+        if (EnemyType == eType.Type3)
         {
             if (m_PlayerCheck)
             {
@@ -291,49 +311,20 @@ public class Enemy : MonoBehaviour
             falling = true;
         }
     }
-   
-    public int EnemyHpCheck(int _value)
-    {
-        if (Type1)
-        {
-            return m_fEnemyType1Hp -= _value;
-           
-        }
-        if (Type2)
-        {
-            return m_fEnemyType2Hp -= _value;
-        }
-        if (Type3)
-        {
-            return m_fEnemyType3Hp -= _value;
-        }
-        return _value;
-    }
 
-    private void EnemyHp()
+    public void EnemyHpCheck(int _damage)
     {
-        if (Type1)
+        EnemyHp -= _damage;
+    }
+    
+    private void EnemyDestory()
+    {
+        if (EnemyHp <= 0)
         {
-            if (m_fEnemyType1Hp <= 0)
-            {
-                Destroy(gameObject);
-            }
-        }
-        if (Type2)
-        {
-            if (m_fEnemyType2Hp <= 0)
-            {
-                Destroy (gameObject);
-            }
-        }
-        if (Type3)
-        {
-            if (m_fEnemyType3Hp <= 0)
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
+    
 
     public void OnTriggerEnemy(HitBoxParent.eHitBoxState _state, HitBoxParent.HitType _hitType, Collider2D _collision)
     {

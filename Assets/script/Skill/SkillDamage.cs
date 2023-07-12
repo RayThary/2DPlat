@@ -26,7 +26,6 @@ public class SkillDamage : MonoBehaviour
                 if (AxeAttack)
                 {
                     enemy.EnemyHpCheck(damage);
-                    Debug.Log("üũ");
                 }
             }
             else
