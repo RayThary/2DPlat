@@ -134,105 +134,187 @@ public class Enemy : MonoBehaviour
             m_PlayerCheck = false;
         }
         //아래이동부분 스위치문으로 줄여놓기
+        if (m_PlayerCheck)
+        {
+            switch (EnemyType)
+            {
+                case eType.Type1:
 
-        //switch (EnemyType)
-        //{ 
-        //}
+                    float f_Type1Right = 0.0f;
+                    if (transform.position.x > dir.x)
+                    {
+                        transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                        f_Type1Right = -1;
+                    }
+                    else if (transform.position.x < dir.x)
+                    {
+                        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        f_Type1Right = 1;
+                    }
 
+                    m_rig2d.velocity = new Vector2(f_Type1Right * EnemySpeed * 2, m_rig2d.velocity.y);
+
+                    if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+                    {
+                        f_Type1Right *= -1;
+                        m_PlayerCheck = false;
+                        m_bReCheckPlayer = true;
+                    }
+                    break;
+                case eType.Type2:
+                    Vector2 m_center = (transform.position + target.position) * 0.5f;
+                    RaycastHit2D hitGround = Physics2D.Raycast(m_center, transform.position - target.position, 8f,
+                        LayerMask.GetMask("Ground,FallinWall"));
+
+                    if (hitGround.collider != null)
+                    {
+                        Debug.Log("ground check");
+                    }
+                    if (transform.position.x > dir.x)
+                    {
+                        transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+
+                    }
+                    else if (transform.position.x < dir.x)
+                    {
+                        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+                    Instantiate(Type2AttackWeapon);
+                    if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+                    {
+
+                    }
+                    m_rig2d.velocity = new Vector2(NextMove, m_rig2d.velocity.y);
+                    break;
+                case eType.Type3:
+                    playerJumpCheck = player.Type3Check(playerJumpCheck);
+                    if (playerJumpCheck)
+                    {
+                        jumpGravity = jumpingPower;
+                        oneJump = true;
+                    }
+                    float f_Type3Right = 0.0f;
+
+                    if (transform.position.x > dir.x)
+                    {
+                        transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                        f_Type3Right = -1;
+                    }
+                    else if (transform.position.x < dir.x)
+                    {
+                        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        f_Type3Right = 1;
+                    }
+
+                    m_rig2d.velocity = new Vector2(f_Type3Right * EnemySpeed * 2, m_rig2d.velocity.y);
+
+                    if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+                    {
+                        f_Type3Right *= -1;
+                        m_PlayerCheck = false;
+                        m_bReCheckPlayer = true;
+                    }
+                    break;
+            }
+        }
         //플레이어가 범위안에 들어오면 플레이어방향으로 2배빠른속도로 달려온다 벽에닿으면 그대로 뒤로돌아간다 그리고 범위밖으로나가도 간다.
-        if (EnemyType == eType.Type1)
-        {
-            if (m_PlayerCheck)
-            {
+        //안씀 위에것 옜날상태 안되면 아랫것보고 수정바람
+        #region
+        //if (EnemyType == eType.Type1)
+        //{
+        //    if (m_PlayerCheck)
+        //    {
 
 
-                float f_right = 0.0f;
-                if (transform.position.x > dir.x)
-                {
-                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-                    f_right = -1;
-                }
-                else if (transform.position.x < dir.x)
-                {
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    f_right = 1;
-                }
+        //        float f_right = 0.0f;
+        //        if (transform.position.x > dir.x)
+        //        {
+        //            transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+        //            f_right = -1;
+        //        }
+        //        else if (transform.position.x < dir.x)
+        //        {
+        //            transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //            f_right = 1;
+        //        }
 
 
-                m_rig2d.velocity = new Vector2(f_right * EnemySpeed * 2, m_rig2d.velocity.y);
+        //        m_rig2d.velocity = new Vector2(f_right * EnemySpeed * 2, m_rig2d.velocity.y);
 
-                if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
-                {
-                    f_right *= -1;
-                    m_PlayerCheck = false;
-                    m_bReCheckPlayer = true;
-                }
-            }
-        }
-        //원거리 공격을 하는 적 플레이어를 발견하면 플레이어위치로 무기던지는적
-        if (EnemyType == eType.Type2)
-        {
-            if (m_PlayerCheck)
-            {
-                Vector2 m_center = (transform.position + target.position) * 0.5f;
-                RaycastHit2D hitGround = Physics2D.Raycast(m_center, transform.position - target.position, 8f,
-                    LayerMask.GetMask("Ground,FallinWall"));
+        //        if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+        //        {
+        //            f_right *= -1;
+        //            m_PlayerCheck = false;
+        //            m_bReCheckPlayer = true;
+        //        }
+        //    }
+        //}
+        ////원거리 공격을 하는 적 플레이어를 발견하면 플레이어위치로 무기던지는적
+        //if (EnemyType == eType.Type2)
+        //{
+        //    if (m_PlayerCheck)
+        //    {
+        //        Vector2 m_center = (transform.position + target.position) * 0.5f;
+        //        RaycastHit2D hitGround = Physics2D.Raycast(m_center, transform.position - target.position, 8f,
+        //            LayerMask.GetMask("Ground,FallinWall"));
 
-                if (hitGround.collider != null)
-                {
-                    Debug.Log("ground check");
-                }
-                if (transform.position.x > dir.x)
-                {
-                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+        //        if (hitGround.collider != null)
+        //        {
+        //            Debug.Log("ground check");
+        //        }
+        //        if (transform.position.x > dir.x)
+        //        {
+        //            transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
 
-                }
-                else if (transform.position.x < dir.x)
-                {
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                }
-                Instantiate(Type2AttackWeapon);
-                if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
-                {
+        //        }
+        //        else if (transform.position.x < dir.x)
+        //        {
+        //            transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //        }
+        //        Instantiate(Type2AttackWeapon);
+        //        if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+        //        {
 
-                }
-                m_rig2d.velocity = new Vector2(NextMove, m_rig2d.velocity.y);
-            }
-        }
-        //플레이어가 따라하는 적
-        if (EnemyType == eType.Type3)
-        {
-            if (m_PlayerCheck)
-            {
-                playerJumpCheck= player.Type3Check(playerJumpCheck);
-                if (playerJumpCheck)
-                {
-                    jumpGravity = jumpingPower;
-                    oneJump = true;
-                }
-                float f_right = 0.0f;
+        //        }
+        //        m_rig2d.velocity = new Vector2(NextMove, m_rig2d.velocity.y);
+        //    }
+        //}
+        ////플레이어가 따라하는 적
+        //if (EnemyType == eType.Type3)
+        //{
+        //    if (m_PlayerCheck)
+        //    {
+        //        playerJumpCheck= player.Type3Check(playerJumpCheck);
+        //        if (playerJumpCheck)
+        //        {
+        //            jumpGravity = jumpingPower;
+        //            oneJump = true;
+        //        }
+        //        float f_right = 0.0f;
 
-                if (transform.position.x > dir.x)
-                {
-                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-                    f_right = -1;
-                }
-                else if (transform.position.x < dir.x)
-                {
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    f_right = 1;
-                }
+        //        if (transform.position.x > dir.x)
+        //        {
+        //            transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+        //            f_right = -1;
+        //        }
+        //        else if (transform.position.x < dir.x)
+        //        {
+        //            transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //            f_right = 1;
+        //        }
 
-                m_rig2d.velocity = new Vector2(f_right * EnemySpeed * 2, m_rig2d.velocity.y);
+        //        m_rig2d.velocity = new Vector2(f_right * EnemySpeed * 2, m_rig2d.velocity.y);
 
-                if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
-                {
-                    f_right *= -1;
-                    m_PlayerCheck = false;
-                    m_bReCheckPlayer = true;
-                }
-            }
-        }
+        //        if (rayHitGround.collider == null || rayHitCheckWall.collider != null)
+        //        {
+        //            f_right *= -1;
+        //            m_PlayerCheck = false;
+        //            m_bReCheckPlayer = true;
+        //        }
+        //    }
+        //}
+        #endregion 안씀 
+
     }
     private void Type3Move()
     {
