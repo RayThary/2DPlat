@@ -5,6 +5,8 @@ using UnityEngine;
 public class SkillDamage : MonoBehaviour
 {
     private Enemy enemy;
+    private RePlayer player;
+
     public enum eSkillType
     {
         Axe,
@@ -49,23 +51,27 @@ public class SkillDamage : MonoBehaviour
         {
             damage = 3;
         }
+        enemy = FindObjectOfType<Enemy>();
     }
+
     private void Update()
+    {
+        AxeDelay();
+    }
+    private void AxeDelay()
     {
         if (skillType == eSkillType.Axe)
         {
-            if (AxeAttack == false)
+            if (GameManager.instance.GetPlayer().AxeAttack == true)
             {
-                if (Input.GetKeyDown(KeyCode.A))
-                {
-                    AxeAttack = true;
-                }
+                AxeAttack = true;
+            }
+            else
+            {
+                AxeAttack = false;
             }
         }
-        if (AxeAttack)
-        {
-            Invoke("Axefalse", 1f);
-        }
+        
     }
     private void Axefalse()
     {

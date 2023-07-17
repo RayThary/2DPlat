@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     public eType EnemyType;
 
     [SerializeField]private int[] arrEnemyHp = { 5, 5, 5 };
-    private int EnemyHp;
+    [SerializeField]private int EnemyHp;
     private BoxCollider2D box2d;
     private Transform m_TrsBefore;
 
@@ -95,7 +95,8 @@ public class Enemy : MonoBehaviour
         reCheckPlayer();
         Type3Move();
         CheckFalling();
-        
+        EnemyDestory();
+        Debug.Log($"Enemy : {EnemyHp}");
     }
 
 
@@ -397,6 +398,7 @@ public class Enemy : MonoBehaviour
     public void EnemyHpCheck(int _damage)
     {
         EnemyHp -= _damage;
+        Debug.Log($"enemyhp : {EnemyHp}");
     }
     
     private void EnemyDestory()
@@ -404,6 +406,7 @@ public class Enemy : MonoBehaviour
         if (EnemyHp <= 0)
         {
             Destroy(gameObject);
+            Debug.Log("1");
         }
     }
     

@@ -33,7 +33,6 @@ public class RePlayer : MonoBehaviour
     float timer = 0.0f;//대시를 하는시간
     [SerializeField] float dashLimitTimer = 0.2f;
 
-    [SerializeField] private LayerMask GroundCheck;
     private bool passCheck;
 
     private Rigidbody2D m_rig2d;

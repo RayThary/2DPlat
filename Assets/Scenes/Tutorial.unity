@@ -875,9 +875,6 @@ MonoBehaviour:
   playerDashMaxCoolTime: 4.9
   playerDashLimit: 0.2
   dashLimitTimer: 0.2
-  GroundCheck:
-    serializedVersion: 2
-    m_Bits: 0
   AxeAttack: 0
   axeDamege: 5
   daggerDamege: 5
@@ -1933,6 +1930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -2475,6 +2473,10 @@ PrefabInstance:
     - target: {fileID: 2106515998071706741, guid: 8ed01f603d9ccdc4fbe4e55f427c28f8, type: 3}
       propertyPath: m_Name
       value: EnemyType1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2106515998071706741, guid: 8ed01f603d9ccdc4fbe4e55f427c28f8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2106515998071706743, guid: 8ed01f603d9ccdc4fbe4e55f427c28f8, type: 3}
       propertyPath: m_RootOrder
@@ -8577,19 +8579,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32da3faaab2d33a4c8280d505d4069e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type1: 0
-  Type2: 0
   Type2AttackWeapon: {fileID: 0}
-  Type3: 0
+  EnemyType: 0
+  arrEnemyHp: 050000000500000005000000
+  EnemyHp: 0
   EnemySpeed: 1
   m_EnemyPlayerCheckRange: 5
   NextMove: 0
   timer: 0
   ChangeTime: 5
   falling: 0
-  m_fEnemyType1Hp: 5
-  m_fEnemyType2Hp: 5
-  m_fEnemyType3Hp: 5
   playerJumpCheck: 0
 --- !u!61 &1291137472
 BoxCollider2D:
@@ -11867,6 +11866,10 @@ PrefabInstance:
     - target: {fileID: 5901971970218052340, guid: 2b3a3e8affe92f64c9f3fa09d47a17b4, type: 3}
       propertyPath: m_Name
       value: EnemyType3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901971970218052340, guid: 2b3a3e8affe92f64c9f3fa09d47a17b4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5901971970218052342, guid: 2b3a3e8affe92f64c9f3fa09d47a17b4, type: 3}
       propertyPath: m_RootOrder
